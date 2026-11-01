@@ -87,6 +87,12 @@ Use the site-specific query strings from `search-queries.md` directly as WebSear
 
 Tag each fallback result as WebSearch-sourced, keeping the portal tag when the fallback stands in for an installed portal whose CLI failed. Step 4 persists this as the entry's `source`, and Step 5 reports which portals ran on the fallback this run.
 
+#### 1d. Official careers sweep (UK PM fork - run every time)
+
+Get today's date first (`date`). Then run `search-queries.md` **Step A**: check every core-ring company's own careers site or ATS board for product roles in the UK or the Czech Republic (London first) (Product Manager / Product Owner / Senior PM), using the ATS endpoints and the Built In London fallback listed there. Open the wider ring only after the core ring is exhausted. Any role still live on the official site counts, whatever its posting date. Record every company whose board and Built In page both failed, for the "Not reachable" line in Step 5.
+
+Then run `search-queries.md` **Step B** (Indeed connector with country `GB`, WebSearch, Built In London) for the listed terms. Aggregator hits are leads only: confirm each on the company's own site and store the official posting URL. Tag sweep results `"source": "websearch"` and `"portal": "official-careers"` so Step 4 records where they came from.
+
 ### Step 2: Fetch & Parse
 
 Before detail fetches, combine the promising search hits into a JSON array in a temporary file outside the repo. Include each hit's source portal and `source` (`cli` or `websearch`), then run:
@@ -133,6 +139,12 @@ The `candidates` command applies these rules before a detail request:
 - Otherwise, skip if the company+title combo already exists in `job_scraper/seen_jobs.json`
 - Skip if the company+role already appears in `job_search_tracker.csv`
 
+**Live-posting and duplicate rules (UK PM fork).** On top of the `candidates` checks:
+- A role counts only if the official posting is live: the page loads with an apply route and isn't marked closed, expired or removed. Use a Built In link only when no official link exists, and say so.
+- Fetch the Notion **Applications DB** fresh (data source `collection://e1070253-2220-462c-8bf0-e22b893c42da`). Skip any company + role already there, including the same requisition under a new title (compare job IDs in URLs, e.g. Experian `jid` numbers). If she already has a different role at the same company, keep the new one and note it.
+- Skip roles already listed in a "Job digest - <date>" page under the Job Hunting page (https://app.notion.com/p/06a0203cfe64449e888ba97d1f3d7186) in the last 7 days, unless that page only listed them without scoring them.
+- Apply the hard exclusions in `search-queries.md` (non-UK, US-citizen/visa-only, pure engineering / data-science / credit-risk-analyst, too senior). A required start before January 2027 is a flag, not an exclusion.
+
 ### Step 2.5: Mass-Posting Detection (within this run)
 
 A distribution pattern worth flagging to the user as a caution signal, not as an accusation against the employer - it describes how a listing is being distributed, not a verdict on whether the company is legitimate. It alone proves nothing is wrong (companies do legitimately hire the same role across several cities); flag it so the user can factor it in when deciding whether to invest time, don't downgrade fit or silently exclude the result because of it.
@@ -146,6 +158,8 @@ For each new job, do a rapid fit check (NOT the full evaluation from `04-job-eva
 - **High match**: Role directly involves your core skills
 - **Medium match**: Role is adjacent to your experience
 - **Low match**: Role requires significant skills you lack
+
+Also tag each job with its target **category** (1 Decisioning & document intelligence, 2 Consumer lending growth, 3 General AI / Technical PM) from `search-queries.md`; the category picks the resume version for scoring and for the Canva CV. Jobs that reach High or Medium are then scored with the **Resume Estimate** in `04-job-evaluation.md` (suitable = total >= 65 and no missing REQUIRED skill) before Step 6b records them.
 
 **Language override:** before assigning a match level, check the posting against `04-job-evaluation.md`'s Language Gate (a required language you haven't declared at all in your CLAUDE.md Languages table). A required language that's entirely undeclared overrides skill fit: mark it **Low** regardless of how well the skills align, and name it in the highlight bullets so it isn't buried under an otherwise-good-looking match. A **declared** language at a requirement that reads higher than your declared level is *not* an override — score fit normally, but add a red-flag bullet under that job's highlights (Step 5) quoting the posting's requirement next to your declared level, so the gap is visible without being auto-downgraded.
 
@@ -297,13 +311,28 @@ If the run found many new jobs (roughly 8+), also suggest `/rank` - it batch-sco
 
 If the user decides to apply to any job, the tracker row is written by **job-application-assistant Step 3b**, which Step 5 already routes into - do not add a second row here. Only when the user says they applied to something outside that path, add a row using the header and the match-then-update rule in `/outcome` Step 1.
 
+### Step 6b: Record suitable roles in the Notion Applications DB (UK PM fork)
+
+For each role the Resume Estimate marks **Suitable**, create one row in `collection://e1070253-2220-462c-8bf0-e22b893c42da` with:
+- Company, Position, Posting URL (official)
+- Stage = "Ready to Apply"
+- Resume Version: one of "SME Credit Decision", "Consumer Lending", "Decision Engine", "General AI Agent (Ship Fast)"
+- Work Type (Hybrid / Remote / On-site), Headquartered, Salary (as stated, else "Not stated")
+- Leave Status empty.
+
+Page body: category, score table (skill, weight, score, resume evidence), conclusion, and caveats (seniority stretch, in-office, start-date flag, email-only application, etc.).
+
+Then write one "Job digest - <YYYY-MM-DD>" page under the Job Hunting page listing every role found: Suitable ones with score, Not suitable ones with a one-line reason, and the "Not reachable" companies.
+
+**Write limits:** only new Applications DB rows and that one digest page. Never edit or delete an existing row. Write the page body under a `## Fit score` heading, the section later steps expect (see `.claude/skills/job-application-assistant/10-notion-pipeline.md`). Next step: `/tailor`. Do not change other Notion pages, apply to anything, email or message anyone, or create accounts on job sites.
+
 ---
 
 ## Important Rules
 
 1. **Never fabricate job postings.** Only present jobs from actual CLI search/detail output or WebSearch/WebFetch results.
 2. **Respect deduplication.** Always check job_scraper/seen_jobs.json AND job_search_tracker.csv before presenting.
-3. **Focus on configured geographic area.** Skip jobs that require relocation or are clearly outside commute range.
+3. **Focus on the two markets.** Keep roles in the UK (London first) or the Czech Republic (any work type). Skip roles based anywhere else (including Taiwan), roles needing visa sponsorship, and roles whose stated salary tops out below the floor in `search-queries.md`.
 4. **Only open positions.** Skip postings with expired deadlines or those marked as closed.
 5. **Be efficient with detail fetches.** Don't run `detail` or WebFetch on every search hit — pre-filter by title/snippet, then fetch only promising matches.
 6. **Parallel searches.** Run portal CLI searches in parallel; use WebSearch only for gaps the CLIs don't cover.

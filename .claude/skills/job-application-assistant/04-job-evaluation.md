@@ -30,6 +30,21 @@ If the candidate's permit also constrains *hours* or *start date* (a student vis
 
 A role that fails this gate is not scored and not drafted. Everything below applies only to roles that pass it.
 
+**This candidate:** holds work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. "Must have the right to work in <one of these>" is a PASS. Roles in any other country (including Taiwan), roles that require sponsorship, and US-citizen-only or security-clearance roles FAIL.
+**Start-date gate (UK roles):** if a UK posting says it needs someone to start before January 2027, **FLAG it, don't fail it** - score it normally and put the start date in the caveats.
+
+## Seniority Gate - run before scoring
+
+From her October 2026 career consult. Read the years of experience and title the posting asks for:
+
+| Posting asks for | Verdict |
+|------------------|---------|
+| Product Manager / Product Owner, 2-5 years | **PASS** - her strongest pool (~4.5 years full-time PM) |
+| Senior Product Manager, 4-6 years | **FLAG** - a stretch but allowed; score it and note "seniority stretch" in caveats |
+| Senior roles demanding 6+ years | **FAIL** - skip |
+| Head of / Director / Principal / Staff / Group PM | **FAIL** - skip |
+| Pure engineering, data-science or credit-risk-analyst roles (not product) | **FAIL** - skip |
+
 ## Language Gate — run before scoring
 
 This gate checks a posting's language requirements against what the candidate actually speaks. It is not one of the five Scoring Dimensions below - it runs before them, structured the same way as the Eligibility Gate above: read the posting, classify against profile data, and treat a hard mismatch as FAIL before scoring. Its verdict is tracked downstream: `/rank` records the result as `language_gate` (PASS/FAIL/FLAG) with a supporting `language_note`, persists both into `seen_jobs.json`, and treats a FAIL as a shortlist veto; `/scrape` surfaces the flag in its results table and carries a language-override rule for postings whose ad language differs from the role's working language. `/apply`'s language detection (Step 1, which extracts a posting's required language generically) feeds this same check.
@@ -46,6 +61,47 @@ Judge the level comparison the same way you judge everything else in this framew
 
 **Worked example:** a candidate whose Languages table lists Spanish (Native) and English (B1/B2). A posting requiring "fluent Russian" → **FAIL**, Russian isn't declared at all. A posting requiring "fluent English" → **FLAG**, English is declared but "fluent" plausibly exceeds B1/B2 — score and draft the application, but tell the candidate this posting's bar may be a stretch and let them decide. A posting requiring "conversational English" or unspecified English → **PASS**, B1/B2 clears a "conversational" bar cleanly.
 
+## Resume versions - which resume reaches which roles
+
+She has **three resumes**. The Applications DB has four Resume Version values because "Decision Engine" and "SME Credit Decision" share one resume page and one Canva master.
+
+| Resume (Notion page) | Resume Version value(s) | Canva master | Category | What it proves best | Where it is thin |
+|---|---|---|---|---|---|
+| 🪄 Decision Engine & SME Credit Decision ([page](https://app.notion.com/p/3d2b07b9915c80ceb4dbece92f51db4d)) | "Decision Engine", "SME Credit Decision" | `DAHW1Fbxau8` | 1 | £2.6M underwriting rescue, LLM eval golden dataset + thresholds, LLM-vs-OCR benchmarking, privacy-first architecture, credit review 8 → 1 hr, FCA / Consumer Duty, KYC/KYB awareness, decision workflow authoring | consumer growth metrics (only the 7.3% → 27.3% funnel) |
+| 💳 Consumer Lending ([page](https://app.notion.com/p/3ecb07b9915c81f4b25ceb5fc0a4d0c2)) | "Consumer Lending" | `DAHW099RtmM` | 2 | MAU 9.1x, funnel 3.7x, insurance attach 7.9% → 12.8%, A/B testing, onboarding & activation, IA redesign (+27.7% MAU), user research, plus the underwriting experience reframed for fair credit decisions | LLM engineering depth, agent building |
+| 🚀 General AI Agent PM (Ship Fast) ([page](https://app.notion.com/p/3ecb07b9915c81b78ea4eb77f36a8fb2)) | "General AI Agent (Ship Fast)" | `DAHW1jC0G8Y` | 3 (incl. Technical PM) | 3 shipped AI products, agent orchestration (Dify, n8n, Make), full-stack build in 3 weeks, eval + HITL + privacy guardrails, career platform (prep time -95%), 9x delivery | regulation detail (FCA, Consumer Duty), consumer funnel depth |
+
+**Choosing for Category 1:** use "SME Credit Decision" when the role is at a lender (SME, specialist, asset/invoice finance); use "Decision Engine" when the employer sells decisioning or document-intelligence software (Taktile, Provenir, Experian, legal/KYC AI vendors). The same resume page backs both.
+
+**When a role fits two categories,** score it against both resumes and keep the higher total. Report which one won.
+
+## Resume Estimate - the suitability decision
+
+This is her own scoring method (Notion "Job search digest", Step 5). It decides **Suitable / Not suitable**; the five dimensions below add context but never override it.
+
+1. **Read the three resume pages first** (Notion):
+   - Decision Engine & SME Credit Decision: https://app.notion.com/p/3d2b07b9915c80ceb4dbece92f51db4d
+   - Consumer Lending: https://app.notion.com/p/3ecb07b9915c81f4b25ceb5fc0a4d0c2
+   - General: https://app.notion.com/p/3ecb07b9915c81b78ea4eb77f36a8fb2
+2. **Pick the best resume version** for the role, using the category from `job-scraper/search-queries.md`: Category 1 -> "Decision Engine" or "SME Credit Decision"; Category 2 -> "Consumer Lending"; Category 3 -> "General AI Agent (Ship Fast)".
+3. **Extract the JD's required skills**, ranked by importance, with weights summing to 100%. Mark hard requirements as **REQUIRED**.
+4. **Score each skill 0-10** using only evidence found in that resume, and cite the resume line. No evidence = 0. Never invent experience.
+5. **Flag any REQUIRED skill scoring 0** as missing.
+6. **Weighted total out of 100** = sum of (weight x score / 10).
+
+**Suitable** = total >= 65 **and** no missing REQUIRED skill. Everything else is **Not suitable**, reported with a one-line reason.
+
+Output table:
+
+```
+| Skill | Weight | REQUIRED | Score (0-10) | Resume evidence (quoted line) |
+|-------|--------|----------|--------------|-------------------------------|
+| ...   | 25%    | yes      | 8            | "..."                         |
+Total: XX/100 - Suitable / Not suitable (reason)
+Resume version: <one of the four>
+Caveats: <seniority stretch, start date, in-office, email-only application, ...>
+```
+
 ## Scoring Dimensions
 
 Evaluate each job posting against these five dimensions:
@@ -60,9 +116,9 @@ How well do the required/preferred skills align with the candidate's capabilitie
 | 40-59 | Partial match, significant upskilling needed |
 | 0-39 | Fundamental mismatch |
 
-**Strong match areas:** [YOUR_PRIMARY_SKILLS]
-**Moderate match areas:** [YOUR_SECONDARY_SKILLS]
-**Weak match areas:** [SKILLS_YOU_LACK]
+**Strong match areas:** AI product management (application-layer AI, not model building); LLM evaluation (golden datasets, release thresholds); LLM-vs-OCR / build-vs-buy selection; credit decisioning and SME underwriting workflows; document intelligence; funnel conversion and growth (7.3% -> 27.3% conversion, MAU 9.1x); rapid full-stack prototyping with AI coding tools
+**Moderate match areas:** consumer lending funnels, KYC/onboarding, legal-tech and insurance workflows, B2B SaaS platform products
+**Weak match areas:** model training / data science, credit-risk modelling and analytics, managing a team of PMs (she has mentored 3 junior PMs but not line-managed PMs)
 
 ### 2. Experience Match (0-100)
 Does work history align with what they're looking for? Match on the function and nature of the work performed, not the literal job title - a "Data Consultant" and a "Data Scientist" role can be functionally identical.
@@ -74,9 +130,9 @@ Does work history align with what they're looking for? Match on the function and
 | 40-59 | Adjacent experience, would need to make the case |
 | 0-39 | Unrelated experience |
 
-**Strong:** [YOUR_DIRECT_EXPERIENCE_DOMAINS]
-**Moderate:** [YOUR_ADJACENT_EXPERIENCE]
-**Entry-level:** [ROLES_WITH_LIMITED_EXPERIENCE]
+**Strong:** AI PM in fintech / SME lending (Strive Computing, SME credit-review and underwriting AI for Chailease; rescued a £2.6M underwriting programme, blueprint adopted by the CCO); founder-PM (QWiz AI); B2C product growth (Travel Expert, WORD UP EdTech)
+**Moderate:** consumer lending, decision-engine vendors, regulated document workflows outside lending (legal, KYC, insurance)
+**Entry-level:** Senior PM scope asking 4-6 years (stretch), PM people leadership
 
 ### 3. Behavioral/Culture Fit (0-100)
 Does the role and company culture match the behavioral profile?
@@ -91,9 +147,11 @@ Does the role and company culture match the behavioral profile?
 **Red flags to research:** Department disorganization, work dominated by maintenance over development, poor chemistry with leadership, culture mismatches. Check reviews, media coverage, LinkedIn connections, and network contacts for insider perspective.
 
 ### 4. Location & Logistics (Pass/Fail + Notes)
-- Within commute range: PASS
-- Remote with occasional office: PASS
-- Requires relocation: FAIL (deal-breaker)
+- Anywhere in the UK or the Czech Republic (hybrid, on-site or remote): PASS (London is first priority; note it as a plus)
+- Based in any other country (including Taiwan), or remote restricted to another country: FAIL (deal-breaker)
+
+**Salary floor (gross annual base):** UK above £80,000; Europe (incl. Czech Republic) above €90,000. A stated salary whose top end is below the floor makes the role **Not suitable** regardless of the Resume Estimate. If no salary is stated, record "Not stated" and carry on - never estimate one.
+- Fully in-office: FLAG (caveat)
 - Frequent international travel: FLAG (discuss with user)
 
 ### 5. Career Alignment & Motivation (0-100)
@@ -107,19 +165,19 @@ Does this role advance career goals and contain tasks that energize?
 | 0-39 | Dead end or backwards step |
 
 **Career goals:**
-- [YOUR_CAREER_GOAL_1]
-- [YOUR_CAREER_GOAL_2]
-- [YOUR_CAREER_GOAL_3]
+- Establish a UK career as "AI Product Manager · Credit Decisioning": AI in decisioning / underwriting workflows
+- Ideal employer: licensed lender or credit vendor, 50-500 people, with its own credit/underwriting product team, decisioning team, or document intelligence putting AI into intake or decisioning
+- Grow from mid-level PM towards Senior PM in regulated AI products
 
 **Motivation filter:** Evaluate not just whether you *can* do the tasks, but whether the tasks will *energize* you. Consider:
-- Tasks that energize: [YOUR_ENERGIZING_TASKS]
-- Tasks that drain: [YOUR_DRAINING_TASKS]
+- Tasks that energize: re-engineering regulated workflows with AI, LLM evaluation and release decisions, shipping fast prototypes, funnel and conversion work
+- Tasks that drain: pure maintenance or backlog administration, roles with no AI or decisioning scope
 - Non-task factors: leadership style, department culture, company values, degree of autonomy
 
 **Life situation alignment:** Consider personal constraints:
-- **Security**: [YOUR_FINANCIAL_SITUATION_CONTEXT]
-- **Flexibility**: [YOUR_SCHEDULE_CONSTRAINTS]
-- **Professional development**: [YOUR_GROWTH_PRIORITIES]
+- **Security**: UK right to work starts January 2027, so UK roles start January 2027 at the earliest
+- **Flexibility**: open to relocating anywhere in the UK or the Czech Republic; London first
+- **Professional development**: deeper credit-decisioning and AI product experience, ideally in the UK market
 
 ### 6. Salary Benchmark (Optional)
 
@@ -176,7 +234,7 @@ Present the evaluation as:
 
 ### Company Research Checklist
 - [ ] Checked company website (mission, values, recent news)
-- [ ] Checked review sites (Glassdoor, Jobindex, etc.)
+- [ ] Checked review sites (Glassdoor, Built In London, etc.)
 - [ ] Checked LinkedIn for team size, recent hires, connections
 - [ ] Checked media for restructuring, growth, or workplace issues
 - [ ] Identified network contacts who may know the team/manager
@@ -243,6 +301,9 @@ consumer benefits.
 (Location is pass/fail, not weighted)
 
 ## Thresholds
+
+The apply / skip decision comes from the **Resume Estimate** above (Suitable = >= 65 and no missing REQUIRED skill). The bands below describe the five-dimension overall score only:
+
 - **Strong Fit** (75+): Definitely apply, tailor everything
 - **Good Fit** (60-74): Apply, address gaps in cover letter
 - **Moderate Fit** (45-59): Consider carefully, discuss with user

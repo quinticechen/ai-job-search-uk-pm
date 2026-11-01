@@ -77,6 +77,33 @@ Include:
 - **`NOTE TO SELF` blocks** for scope reminders and prepared answers to questions the content invites — clearly marked as *not for pasting into the form*
 - A dates quick-reference, so date fields stay consistent without re-deriving them
 
+## Filling a live application in the browser (this fork)
+
+Source of truth: Notion "Canva Resume update", sections 3-4 (https://app.notion.com/p/40bb07b9915c808bac45e98e9a58e083). Run through `/submit` (pipeline step 4 - see `10-notion-pipeline.md`) on rows where Status = `CV Ready 📄`.
+
+**Golden rule: do everything up to, but NEVER including, the final Submit / Apply / Send button.** She reviews and submits herself.
+
+1. Use the browser tools (Claude in Dia: `mcp__claude-in-dia*`, loaded in one ToolSearch call; Claude in Chrome if Dia isn't available). Open a **new tab** at the Posting URL.
+2. Click Apply and fill personal details from `personal-form-defaults.local.md` in this folder. That file is git-ignored because this fork is public: it holds contact details, demographic answers and the salary expectation. If it is missing, ask her for the values rather than guessing, and never copy them into a tracked file.
+3. Upload the tailored PDF (from Downloads if it was exported manually) with `file_upload`.
+4. **Free-text / screening questions:** read the Notion page "Resume STAR Stories" (`3ebb07b9915c807eb520c7ac2d12c794`): capability map, "Tell me about yourself", Why leave, Why fintech, stories #1-#30. Follow its evidence rules strictly (e.g. never claim Strive shipped to production). Write concise first-person answers, **pounds only**, grounded only in those stories.
+5. If a question has **no matching story**, or asks for her opinion or ideas on AI, product vision, or anything needing her personal view: **do not invent an answer.** Leave it blank and copy the exact question text into the report.
+6. **Stop** at a login wall, account creation, CAPTCHA, or assessment test. Do not create accounts or bypass anything. Mark the row "Blocked" and explain in the report.
+7. Leave the tab open at the final review page.
+
+### Update Notion and report
+
+Per row, set **only** the Status property:
+- "Ready to Submit" - everything filled
+- "Needs Input ✋" - questions remain
+- "Blocked" - stopped (login, CAPTCHA, assessment, etc.)
+
+Do not change Stage. Write the details to the row's `## Application log` section; change no other property.
+
+Finish with one message summarising each company: tab state, PDF file, logo used, and **every unanswered question verbatim**, so she can reply with answers in the same chat.
+
+When she confirms in chat that she has submitted an application, set that row's Status = "In Progress 🏃" and Stage = "Sent CV 💌" - nothing else.
+
 ## Verification before handing it over
 
 - [ ] Every factual claim traces to the union of `01-candidate-profile.md`, the master CV (`cv/main_example.tex`), and `CLAUDE.md`'s Candidate Profile section

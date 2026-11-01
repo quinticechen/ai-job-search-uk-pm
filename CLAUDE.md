@@ -6,22 +6,37 @@
 ## Role
 This repo is a job application workspace. Claude acts as a career advisor and application assistant for [YOUR_NAME], helping with:
 1. **Job fit evaluation** - Assess job postings against your profile (skills, experience, behavioral traits)
-2. **CV tailoring** - Adapt existing CV templates (LaTeX/moderncv) to target specific roles
+2. **CV tailoring** - Copy and tailor the Canva master resumes (see `05-cv-templates.md`); LaTeX/moderncv is the fallback
 3. **Cover letter writing** - Draft targeted cover letters using existing templates (LaTeX)
 4. **Interview preparation** - Prepare answers, questions, and talking points for interviews
 5. **Career strategy** - Advise on positioning and personal branding
+
+## Notion pipeline (how this fork is used)
+
+The Notion Applications DB is the record of every application; full rules in `.claude/skills/job-application-assistant/10-notion-pipeline.md`.
+
+1. `/scrape` - find roles, add suitable ones to Notion (Stage = Ready to Apply)
+2. `/tailor` - write tailored resume content into each row (Status = CV Drafted 📝); she reviews, edits and sets CV Approved ✅
+3. `/canva` - build the approved content in Canva, export the PDF, upload it to the row (Status = CV Ready 📄)
+4. `/submit` - fill the application in the browser and stop before Submit (Status = Ready to Submit); after she submits, `/submit confirm <company>` sets Stage = Sent CV 💌
+5. `/interview` - prep pack for rows at an interview stage, written into the row
 
 ## Candidate Profile
 
 <!-- This section is auto-populated by /setup. You can also fill it in manually. -->
 
 ### Identity
-- **Name:** [YOUR_NAME]
-- **Location:** [YOUR_CITY], [YOUR_COUNTRY] ([YOUR_COMMUTE_CONSTRAINTS])
+- **Name:** Quintice Chen
+- **Target:** Product Manager roles (PM / Product Owner / Senior PM) with an AI or credit-decisioning focus
+- **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote)
+- **Salary floor:** UK above £80,000; Europe above €90,000 (gross annual base)
+- **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic
 - **Languages:**
   | Language | Level |
   |----------|-------|
-  | [LANGUAGE] | [LEVEL] |
+  | English | Fluent |
+  | Mandarin Chinese | Native |
+  | Spanish | Basic (not a working language) |
   <!-- Every language you work in professionally, with your level (CEFR, "native," "professional
   working proficiency," whatever your CV/LinkedIn use - no need to force it into one scale). An
   undeclared language is a hard deal-breaker if a posting requires it; a declared language at a
@@ -78,14 +93,18 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 
 ### Target Sectors
 <!-- Industries and companies you're targeting -->
-- [SECTOR_1]: [EXAMPLE_COMPANIES]
-- [SECTOR_2]: [EXAMPLE_COMPANIES]
+Full company lists and categories: `.claude/skills/job-scraper/search-queries.md`.
+- Decision engines & SME/specialist lending: Taktile, Provenir, Experian, iwoca, OakNorth, Allica Bank, Funding Circle
+- Consumer lending growth: Lendable, Zopa, Monzo, ClearScore, Klarna UK
+- Regulated document / workflow AI: Luminance, Harvey, Sumsub, Quantexa, Cytora
 
 ### Deal-breakers
 <!-- Hard constraints on job search. Language requirements are handled separately and
 automatically from your Languages table above - don't duplicate them here. -->
-- [DEALBREAKER_1]
-- [DEALBREAKER_2]
+- Roles based outside the UK and the Czech Republic (including Taiwan), or needing visa sponsorship
+- Stated salary below the floor (UK £80,000; Europe €90,000)
+- Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years
+- Pure engineering, data-science or credit-risk-analyst roles
 
 ## Repo Structure
 - `cv/` - LaTeX CV variants (moderncv template, banking style)

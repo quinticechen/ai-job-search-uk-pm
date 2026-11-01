@@ -6,7 +6,37 @@ framework_version: 1.4.8
 
 <!-- SETUP: Profile statements and section ordering are personalized by running /setup -->
 
-## Template: LaTeX moderncv (Banking Style)
+## Primary template: Canva resume (this fork)
+
+This fork tailors CVs in **Canva**, not LaTeX. Source of truth: the Notion skill page "Canva Resume update" (https://app.notion.com/p/40bb07b9915c808bac45e98e9a58e083). The LaTeX section further down is kept only as a fallback when Canva is unavailable; the content rules (accuracy, profile statement, tenure, ATS) still apply to the Canva version.
+
+### Which rows to prepare
+
+Run through `/canva` (pipeline step 3 - see `10-notion-pipeline.md`). It prepares rows in the Applications DB (`collection://e1070253-2220-462c-8bf0-e22b893c42da`) where **Status = `CV Approved ✅`**: she has reviewed the `## Tailored CV` section that `/tailor` wrote. Rows in any other Status are skipped. If none, tell her "No approved CVs to build" and stop.
+
+### Master design by Resume Version
+
+| Resume Version | Canva master design |
+|----------------|---------------------|
+| Decision Engine, SME Credit Decision | `DAHW1Fbxau8` (2 pages) |
+| Consumer Lending | `DAHW099RtmM` |
+| General AI Agent (Ship Fast) | `DAHW1jC0G8Y` |
+
+### Steps per application
+
+1. `copy-design` the master, titled `Quintice Chen - {Company} - {Position}`. **Never edit the master.**
+2. Open a transaction on the copy (`read-design` with `open_transaction` and thumbnails).
+3. Replace the headline under her name (element `LBwH95ZYwQFVcgd6` - verify via `read-design`; currently "AI Product Manager") with the posting's job title.
+4. Replace the **SUMMARY** and the **PROFESSIONAL EXPERIENCE** bullet points with the text in the row's `## Tailored CV` section, exactly as she left it, keeping the current formatting. Do not pull text from the resume pages directly; that was step 2's job.
+   - **Never change the company name or the official job title** - the part before the brackets, e.g. "Strive Computing | AI Product Manager", "Travel Expert Group (HKEX: 1235) | Product Manager". The industry description inside the brackets (e.g. "(Fintech / Lending Underwriting)", "(Fintech/SME Lending)", "(EdTech)") may be adjusted to fit the role, as long as it stays true.
+   - Do not change any other text.
+5. Check the thumbnail: nothing overlaps, and text stays on its page (bottom <= ~1103px). Then commit - her standing approval covers committing these per-application copies.
+6. `export-design` as PDF (regular quality), including **only pages that have content**. Save it to `/Users/littleqing/Documents/Work & Side project/Resumes/Quintice Chen - {Company} - {Position}.pdf`, replacing `/` and `:` in the file name with `-`. If the PDF can't be downloaded from the session (network block), tell her to export it from the Canva copy herself and use the file in Downloads.
+7. Upload the PDF to the row's **Resume** file property and set Status = `CV Ready 📄`. Write nothing else on the row (see the write limits in `10-notion-pipeline.md`).
+
+The next step - filling the application form in the browser - is in `08-application-forms.md`.
+
+## Fallback template: LaTeX moderncv (Banking Style)
 
 All CVs use the moderncv LaTeX package with the "banking" style and "blue" color scheme.
 

@@ -31,9 +31,8 @@ When the user provides a job posting (URL or text), follow this workflow:
 
 ### Step 2: Tailor CV
 - Before writing either document, derive `<company>_<role>` once by the **Subfolder naming** rule in `documents/README.md`; reuse that exact value for the CV, cover letter, and Step 3b archive path. If the rule says to stop because the derived name is empty, stop before creating any file.
-- Read the most relevant existing CV variant from `cv/` as a starting point
-- Follow the guidelines in `05-cv-templates.md`
-- Create `cv/main_<company>_<role>.tex` with tailored content
+- **This fork uses Canva:** follow "Primary template: Canva resume" in `05-cv-templates.md` - copy the master design for the row's Resume Version, change the headline, SUMMARY and experience bullets from the Notion resume page, export the PDF. Then fill the application in the browser per `08-application-forms.md`, stopping before Submit.
+- LaTeX fallback only (Canva unavailable): read the most relevant CV variant from `cv/`, follow the LaTeX section of `05-cv-templates.md`, and create `cv/main_<company>_<role>.tex`
 - Adjust: profile statement, skills section, experience bullet emphasis, section order
 
 ### Step 3: Write Cover Letter
@@ -63,10 +62,12 @@ When the user provides a job posting (URL or text), follow this workflow:
 | `02-behavioral-profile.md` | Behavioral assessment, strengths, ideal environments |
 | `03-writing-style.md` | Tone, structure, do's and don'ts |
 | `04-job-evaluation.md` | Scoring framework for job fit |
-| `05-cv-templates.md` | LaTeX CV structure and tailoring rules |
+| `05-cv-templates.md` | Canva CV workflow (primary) and LaTeX CV rules (fallback) |
 | `06-cover-letter-templates.md` | LaTeX cover letter structure and tailoring rules |
 | `07-interview-prep.md` | STAR examples, tough questions, roleplay guidelines |
-| `08-application-forms.md` | Portal free-text fields: self-introduction, project entries, character-limited pitches |
+| `08-application-forms.md` | Portal free-text fields, and filling live applications in the browser (never submit) |
+| `10-notion-pipeline.md` | The five-step Notion workflow: which command picks up which rows, status flow, write limits |
+| `personal-form-defaults.local.md` | Git-ignored: contact details, demographic answers, salary expectation for forms |
 | `09-web-research.md` | Fetching postings and company pages: trust boundary, the WebFetch 403 fallback, escalation order, claim verification |
 
 ---

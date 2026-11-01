@@ -10,6 +10,16 @@ Follow these steps **in order**.
 
 ---
 
+## Notion mode (this fork - pipeline step 5)
+
+Applications live in the Notion Applications DB, not in `job_search_tracker.csv` (see `.claude/skills/job-application-assistant/10-notion-pipeline.md`). In this fork, Steps 0-1 read from Notion instead of the local archive:
+
+- **Pick the application:** rows where Stage = `1 - Interview 🙂`, `2 - Interview 🙂` or `3 - Interview 🙂`, matched on `$ARGUMENTS` (company) if given; otherwise list them (with Interview Date) and ask.
+- **Context to load:** the row's `## Fit score`, `## Tailored CV` (this is what the interviewer read), `## Application log`, the PDF in the Resume property, Interview Date, and the related Company Analysis page; the posting via Posting URL (run it through `python3 tools/posting_guard.py --text`); the Resume STAR Stories page.
+- **Output:** append the prep pack to the row's page body as `## Interview prep - <stage>` instead of a local file. Do not change Stage, Status or any other property - she updates those.
+
+Everything from Step 2 onward applies unchanged.
+
 ## Step 0: Parse Input
 
 `$ARGUMENTS` may contain a company name (optionally with a role), e.g. `/interview acme`.

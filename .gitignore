@@ -119,3 +119,7 @@ company_research/*.json
 
 # Brainstorm mockups (superpowers visual companion) - never ship
 .superpowers/
+
+# Local-only personal data for this fork (form-fill answers, salary). The fork
+# is public, so anything sensitive lives in *.local.md files that git ignores.
+**/*.local.md
