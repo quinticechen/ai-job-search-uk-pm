@@ -80,6 +80,69 @@ site:startupjobs.cz "product manager"
 site:linkedin.com/jobs "product manager" fintech OR AI Prague
 ```
 
+### Job sites to search
+
+Cover every group below in each run (narrow-to-wide, London first). All of them are **leads only**: confirm each role on the company's own careers site or ATS before it counts, and record that official URL. Search them through WebSearch with `site:` queries (or the Indeed connector where noted); never log in, create accounts or scrape behind a login.
+
+**United Kingdom - mainstream boards**
+
+| Site | `site:` / how | Notes |
+|------|---------------|-------|
+| LinkedIn Jobs | `site:linkedin.com/jobs` (or the low-volume `linkedin-search` CLI) | Largest UK board |
+| Indeed UK | Indeed connector, country `GB` | |
+| Reed | `site:reed.co.uk` | |
+| Totaljobs | `site:totaljobs.com` | |
+| CV-Library | `site:cv-library.co.uk` | |
+| Glassdoor UK | `site:glassdoor.co.uk` | Also for company reviews |
+| Adzuna UK | `site:adzuna.co.uk` | Aggregator |
+| Guardian Jobs | `site:jobs.theguardian.com` | |
+| Find a Job (GOV.UK) | `site:findajob.dwp.gov.uk` | Government board |
+| Built In London | `https://builtinlondon.uk/jobs/product-management?search=<term>` | Tech and fintech |
+| eFinancialCareers | `site:efinancialcareers.co.uk` | Finance and fintech |
+| Welcome to the Jungle (formerly Otta) | `site:welcometothejungle.com` | Tech and startups |
+| Escape the City | `site:escapethecity.org` | Mission-driven / startups |
+
+**Czech Republic - mainstream boards**
+
+| Site | `site:` / how | Notes |
+|------|---------------|-------|
+| Jobs.cz | `site:jobs.cz` | Largest Czech board |
+| Prace.cz | `site:prace.cz` | Same group as Jobs.cz |
+| StartupJobs.cz | `site:startupjobs.cz` | Czech startups |
+| Profesia.cz | `site:profesia.cz` | |
+| LinkedIn Jobs | `site:linkedin.com/jobs` with Prague / Brno / Czechia | |
+| Indeed CZ | Indeed connector, country `CZ` | |
+| Jobstack.it | `site:jobstack.it` | Tech roles |
+| Built In (Prague) | `site:builtin.com` "Prague" OR "Czechia" | |
+
+Czech postings are often in Czech: also search `produktový manažer`, `product owner`, `produktový vlastník`. A posting that requires Czech fails the Language Gate.
+
+**Startups and venture-backed companies**
+
+| Site | `site:` / how | Notes |
+|------|---------------|-------|
+| Y Combinator - Work at a Startup | `site:workatastartup.com` and `site:ycombinator.com/companies` "jobs" | Filter to London / UK / remote-UK / Europe |
+| Wellfound (formerly AngelList Talent) | `site:wellfound.com/jobs` | |
+| Seedtable | `site:seedtable.com/jobs` | European startups |
+| VC portfolio job boards | `site:talent.seedcamp.com`, `site:talent.octopusventures.com`, `site:jobs.balderton.com`, `site:indexventures.com/startup-jobs` | UK/European portfolios; many fintechs |
+| Hacker News "Who is hiring" | `site:news.ycombinator.com "Who is hiring"` + "London" OR "remote (UK)" | Monthly thread |
+
+**Worldwide remote boards**
+
+| Site | `site:` / how |
+|------|---------------|
+| We Work Remotely | `site:weworkremotely.com` |
+| Remote OK | `site:remoteok.com` |
+| Remotive | `site:remotive.com` |
+| Working Nomads | `site:workingnomads.com` |
+| Himalayas | `site:himalayas.app` |
+| Remote.co | `site:remote.co` |
+| JustRemote | `site:justremote.co` |
+| EU Remote Jobs | `site:euremotejobs.com` |
+| Jobgether | `site:jobgether.com` OR `site:jobs.lever.co/jobgether` |
+
+**Remote roles must allow employment from the UK or the Czech Republic.** "Remote" does not mean worldwide: check the posting's allowed countries or time zones, and skip roles limited to the US or other countries. A Jobgether or aggregator listing is a lead to the real employer, never the posting itself.
+
 ### Priority 1: Decisioning & document intelligence (Category 1)
 
 ```

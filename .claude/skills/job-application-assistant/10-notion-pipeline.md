@@ -19,7 +19,7 @@ Do not use `/notion-sync`, `job_search_tracker.csv` or `documents/applications/`
 
 | # | Step | Command | Picks up rows where | Moves row to |
 |---|------|---------|---------------------|--------------|
-| 1 | Find roles, record suitable ones | `/scrape` (job-scraper Step 6b) | - (creates new rows) | Stage = `Ready to Apply`, Status empty |
+| 1 | Find roles, record suitable ones | `/scrape` (job-scraper Step 6b) | - (creates new rows) | Stage = `Ready to Apply`, Status = `In Progress 🏃` |
 | 2 | Tailor resume content | `/tailor` | Stage = `Ready to Apply`, Status empty | Status = `CV Drafted 📝` (or `Needs Input ✋`) |
 | - | **She reviews and edits the draft in Notion** | (manual) | Status = `CV Drafted 📝` | Status = `CV Approved ✅` (she sets it) |
 | 3 | Canva resume + PDF | `/canva` | Status = `CV Approved ✅` | Status = `CV Ready 📄` (or `Blocked`) |

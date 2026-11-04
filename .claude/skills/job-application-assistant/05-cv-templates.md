@@ -30,7 +30,14 @@ Run through `/canva` (pipeline step 3 - see `10-notion-pipeline.md`). It prepare
 4. Replace the **SUMMARY** and the **PROFESSIONAL EXPERIENCE** bullet points with the text in the row's `## Tailored CV` section, exactly as she left it, keeping the current formatting. Do not pull text from the resume pages directly; that was step 2's job.
    - **Never change the company name or the official job title** - the part before the brackets, e.g. "Strive Computing | AI Product Manager", "Travel Expert Group (HKEX: 1235) | Product Manager". The industry description inside the brackets (e.g. "(Fintech / Lending Underwriting)", "(Fintech/SME Lending)", "(EdTech)") may be adjusted to fit the role, as long as it stays true.
    - Do not change any other text.
-5. Check the thumbnail: nothing overlaps, and text stays on its page (bottom <= ~1103px). Then commit - her standing approval covers committing these per-application copies.
+5. Check the thumbnail: nothing overlaps, and text stays on its page (bottom <= ~1103px). If text overflows, fix the layout in this order and never shorten her text:
+   1. **Shift down.** Let the grown boxes take their natural height and move every section below them down (`position_element`; the header divider is a line, so move it with `update_line_properties`). This uses the page's spare room.
+   2. **Tighten spacing.** Set line height on the Summary and all bullet boxes to 1.32 (from 1.45); go down to 1.305 (the 10% limit) only if needed. Never change font size. Each body line then saves about 1.7px.
+   3. **Trim gaps.** If still over, shrink the gap between jobs to no less than 7px and the gap above "Professional experience" to no less than 12px.
+   4. **Stop.** If it still overflows, cancel the transaction and set Status = `Needs Input ✋` with the amount over.
+   Do not move blocks to page 2: `add_text` creates boxes in Canva's default font and `format_text` cannot set the font family, so moved text would not match the template.
+   Restack helpers that compute every position from the measured box heights: write one per master (summary top, element IDs, title→description→bullets offsets). Job titles with a long industry bracket can run into the dates on the same line; flag them in the report rather than changing the text.
+   Re-check the thumbnails of both pages after each change. Then commit - her standing approval covers committing these per-application copies.
 6. `export-design` as PDF (regular quality), including **only pages that have content**. Save it to `/Users/littleqing/Documents/Work & Side project/Resumes/Quintice Chen - {Company} - {Position}.pdf`, replacing `/` and `:` in the file name with `-`. If the PDF can't be downloaded from the session (network block), tell her to export it from the Canva copy herself and use the file in Downloads.
 7. Upload the PDF to the row's **Resume** file property and set Status = `CV Ready 📄`. Write nothing else on the row (see the write limits in `10-notion-pipeline.md`).
 

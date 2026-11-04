@@ -12,7 +12,8 @@ Query the Applications DB for rows where Status = `CV Approved ✅`. If `$ARGUME
 
 1. Read the row's `## Tailored CV` section. Her edits are final - use the text exactly as it stands. If the section is missing or empty, set Status = `Needs Input ✋` and move on.
 2. Follow steps 1-6 of the Canva workflow in `05-cv-templates.md`: copy the master for the row's Resume Version, open a transaction, set the headline, replace the Summary and experience bullets with the Tailored CV text, check the thumbnail fits, commit, export the PDF.
-3. If text does not fit on the page, shorten nothing yourself: set Status = `Needs Input ✋` and report which section overflows by how much.
+3. If text does not fit, change the layout, never the text. Her approved wording is what the ATS reads, so the template adapts to the text, not the other way round. Follow the overflow steps in `05-cv-templates.md` (step 5). Set Status = `Needs Input ✋` only if the content still won't fit in 2 pages after those steps, and report how much is over.
+4. After export, run `python3 tools/verify_pdf.py <pdf> --dump-text <txt>` and confirm the ATS text layer contains the headline, the full summary, every bullet, the email and the phone number, in reading order. If no extractor is installed, say so in the report and don't count it as a failure.
 
 ## Step 3: Per row - record
 

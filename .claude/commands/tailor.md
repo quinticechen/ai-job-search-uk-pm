@@ -21,8 +21,8 @@ Query the Applications DB for rows where Stage = `Ready to Apply`, Status is emp
 1. Read the row's `## Fit score` section and fetch the official posting. If the posting is closed or unreachable, set Status = `Blocked`, note why, and move on.
 2. Start from the matching resume page. Change only:
    - **Headline** = the posting's job title
-   - **Summary** - reframed for this role, about the same length as the base resume's summary
-   - **Experience bullets** - reorder, reword and swap in other true bullets from the three resume pages or the STAR stories so the posting's key requirements are covered. Keep about the same number of bullets per role as the base resume, so the Canva layout still fits.
+   - **Summary** - reframed for this role, as long as it needs to be to carry the posting's key terms (no fixed line limit)
+   - **Experience bullets** - reorder, reword and swap in other true bullets from the three resume pages or the STAR stories so the posting's key requirements are covered. Write for the posting and the ATS first: cover its key requirements in its own terms. Don't trim text to fit the Canva master, because `/canva` reflows the layout. Keep the whole CV within 2 pages.
 3. Rules:
    - Every claim must trace to a resume page, the STAR stories or `01-candidate-profile.md`. Never invent. Never claim Strive shipped to production; the 87% is internal testing.
    - Company names and official job titles stay unchanged; only the industry description in brackets may change (see `01-candidate-profile.md`).
