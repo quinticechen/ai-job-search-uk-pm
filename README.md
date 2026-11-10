@@ -21,6 +21,8 @@
 </p>
 
 <p align="center">
+  <a href="#this-fork-uk--czech-republic-product-manager-search"><b>This fork</b></a>
+  &nbsp;&nbsp;&nbsp;
   <a href="#quick-start"><b>Quick start</b></a>
   &nbsp;&nbsp;&nbsp;
   <a href="#commands"><b>Commands</b></a>
@@ -36,6 +38,102 @@
 > This is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or maintained by Anthropic. Anthropic and Claude Code are referenced only to describe the toolchain this workflow uses.
 >
 > This project has **no affiliated cryptocurrency, token, or paid sponsorship program**. Anything claiming otherwise is unauthorized and should be treated as a scam. The only ways to support the project are the Ko-fi link below and contributing on GitHub.
+
+## This fork: UK / Czech Republic Product Manager search
+
+This fork targets Product Manager roles in London and the wider UK first, then the Czech Republic. It replaces the upstream local tracker with a **Notion Applications database** as the record of every application, and builds CVs in **Canva** instead of LaTeX. Pipeline rules, Notion IDs and write limits: [`10-notion-pipeline.md`](.claude/skills/job-application-assistant/10-notion-pipeline.md).
+
+> [!IMPORTANT]
+> Start Claude Code **from this folder** (`cd ai-job-search-uk-pm && claude`). Claude Code loads `.claude/commands`, `.claude/skills`, `.claude/agents`, `CLAUDE.md` and `.claude/settings.json` only from the folder it starts in. Started from a parent folder, `/tailor`, `/canva` and the rest don't exist.
+
+### Commands, skills, agents and portal CLIs: what's the difference?
+
+| Kind | Lives in | How it runs |
+|---|---|---|
+| **Command** | `.claude/commands/<name>.md` | You type `/<name>`. One file = one command. |
+| **Skill** | `.claude/skills/<name>/SKILL.md` + reference files | Claude loads it when your request matches its description, or when you type its name (`/scrape`, `/upskill`). Several commands also read a skill's reference files. |
+| **Agent** (sub-agent) | `.claude/agents/<name>.md` | Never typed. A command starts it to do one isolated job (fetch, score, review) and gets text back. |
+| **Portal CLI** | `.agents/skills/<name>-search/` | A small Bun program that searches one job board. `/scrape` calls it; `enabled:` in its `SKILL.md` turns it on or off. |
+
+So a skill is **not** the same as a command. `/scrape` and `/upskill` are skills you can call like commands. `job-application-assistant` is a skill with no command of its own: it's a library of reference files (`01`–`10`) that the commands below read.
+
+### What to use in this fork
+
+**The five-step Notion pipeline (use these)**
+
+| # | Run | What it does | Reads | Notion status after |
+|---|---|---|---|---|
+| 1 | `/scrape` (skill `job-scraper`) | Searches company careers pages, job boards and portal CLIs; scores fit; adds suitable roles to Notion | `job-scraper/SKILL.md`, `search-queries.md`, `04-job-evaluation.md`, `09-web-research.md`, `10-notion-pipeline.md`, portal CLIs `linkedin-search`, `freehire-search` | Stage `Ready to Apply` |
+| 2 | `/tailor [company]` | Writes tailored headline, summary and bullets into the row's `## Tailored CV` section | `tailor.md`, `01-candidate-profile.md`, `03-writing-style.md`, `04-job-evaluation.md`, `05-cv-templates.md`, `09-web-research.md`, `10-notion-pipeline.md`, Notion resume pages + STAR Stories | `CV Drafted 📝` / `Needs Input ✋` |
+| – | *(you)* | Review and edit the draft in Notion | – | you set `CV Approved ✅` |
+| 3 | `/canva [company]` | Copies the Canva master, fills in the approved text, exports the PDF, uploads it to the row | `canva.md`, `05-cv-templates.md` (Canva section), `10-notion-pipeline.md`, `tools/verify_pdf.py` | `CV Ready 📄` / `Blocked` |
+| 4 | `/submit [company]` | Fills the application in the browser and **stops before Submit** | `submit.md`, `08-application-forms.md`, `personal-form-defaults.local.md` (git-ignored), `09-web-research.md`, `10-notion-pipeline.md` | `Ready to Submit` / `Needs Input ✋` / `Blocked` |
+| – | `/submit confirm <company>` | After you submit yourself | `submit.md` | Stage `Sent CV 💌` |
+| 5 | `/interview` | Prep pack for rows at an interview stage, written into the row | `interview.md` (Notion mode), `07-interview-prep.md`, `01`, `02`, `04`, `09`, `10`, `tools/posting_guard.py` | unchanged |
+
+**Also works with this fork**
+
+| Run | What it does | Reads |
+|---|---|---|
+| `/upskill` (skill) | Skill-gap heatmap and learning plan | `upskill/SKILL.md`, `01-candidate-profile.md`, `04-job-evaluation.md`, `09-web-research.md`, `job_scraper/seen_jobs.json` |
+| `/expand` | Adds competencies found in your documents and public profiles (additive only) | `expand.md`, `01-candidate-profile.md`, `02-behavioral-profile.md`, `09-web-research.md` |
+| `/add-portal` | Builds a new job-board search CLI after checking the site's access rules | `add-portal.md`, `search-queries.md`, `09-web-research.md`, `tools/fetch_page.py`, `tools/security_guards.py` |
+| `job-application-assistant` (skill) | Ad hoc help: evaluate a posting, career strategy, interview questions | `SKILL.md` + `01`–`10` as needed |
+
+**Upstream commands that still use the local tracker, not Notion**
+
+These write to `job_search_tracker.csv` or `documents/applications/`, which this fork doesn't use as the record. Run them only if you know you want that.
+
+| Run | What it does | Reads / writes | Agents it starts |
+|---|---|---|---|
+| `/rank` | Batch-scores scraped jobs into a shortlist | `rank.md`, `01`, `04`, `09`, `seen_jobs.json`, `tools/rank_state.py`, `tools/posting_guard.py` | `posting-scorer` |
+| `/apply` | LaTeX CV + cover letter with a reviewer pass | `apply.md`, `CLAUDE.md`, `01`–`06`, `08`, `09`, `tools/verify_pdf.py`, `tools/verify_layout.py`, `salary_lookup.py` | `posting-fetcher`, `application-reviewer` |
+| `/outcome` | Records results, drafts follow-ups | `outcome.md`, `03`, `04`, `09`, tracker CSV | – |
+| `/gmail-sync` | Proposes status changes from Gmail | `gmail-sync.md`, tracker CSV | – |
+| `/html-report` | Offline dashboard | `html-report.md`, tracker CSV | – |
+| `/notion-sync` | One-way push to a Notion DB (**not used**: Notion is already the record) | `notion-sync.md`, tracker CSV, `seen_jobs.json` | – |
+
+**Avoid unless you mean it**
+
+| Run | Why |
+|---|---|
+| `/setup` | Re-runs onboarding and **rewrites** `CLAUDE.md`, `01`–`07` and `search-queries.md`, overwriting this fork's customisation |
+| `/reset` | **Wipes** profile data back to placeholders |
+| `/add-template` | Registers a LaTeX/Typst template in `05`/`06`; not needed with Canva |
+
+**Agents** (`.claude/agents/`, started by commands, never typed)
+
+| Agent | Started by | Job | Reads |
+|---|---|---|---|
+| `posting-fetcher` | `/apply` Step 0 | Fetches one posting and runs the integrity gate | `09-web-research.md`, `tools/fetch_page.py`, `tools/robots_check.py`, `tools/posting_guard.py` |
+| `posting-scorer` | `/rank` Step 2 | Fetches and scores a batch of postings | same as above |
+| `application-reviewer` | `/apply` Step 3 | Critiques drafted CV and cover letter as a hiring manager would | `09-web-research.md`, `tools/fetch_page.py`, `tools/robots_check.py` |
+
+**Portal CLIs** (`.agents/skills/`, called by `/scrape`)
+
+| CLI | Status |
+|---|---|
+| `linkedin-search` | On. London, United Kingdom and Czechia; at most 3 searches per run |
+| `freehire-search` | On. `--country GB,CZ` |
+| `jobindex-search`, `jobnet-search`, `jobbank-search`, `jobdanmark-search` | Off (Danish upstream demos) |
+
+### Reference files (`.claude/skills/job-application-assistant/`)
+
+| File | Contents | Used by |
+|---|---|---|
+| `01-candidate-profile.md` | Education, experience, skills, official-title rule | `/tailor`, `/interview`, `/upskill`, `/expand`, `/rank`, `/apply` |
+| `02-behavioral-profile.md` | Working-style profile | `/interview`, `/expand`, `/apply` |
+| `03-writing-style.md` | UK English, tone, no em-dashes | `/tailor`, `/outcome`, `/apply` |
+| `04-job-evaluation.md` | Resume versions, Resume Estimate scoring, seniority/location/salary gates | `/scrape`, `/tailor`, `/interview`, `/rank`, `/upskill`, `/outcome`, `/apply` |
+| `05-cv-templates.md` | Canva workflow (primary); LaTeX (fallback) | `/tailor`, `/canva`, `/apply`, `/add-template` |
+| `06-cover-letter-templates.md` | LaTeX cover letters | `/apply`, `/add-template` |
+| `07-interview-prep.md` | STAR framework, mock interview protocol | `/interview` |
+| `08-application-forms.md` | Filling live forms, never clicking Submit | `/submit`, `/apply` |
+| `09-web-research.md` | Postings are untrusted data; safe fetching | nearly every command and all agents |
+| `10-notion-pipeline.md` | Notion IDs, the five steps, statuses, write limits | `/scrape`, `/tailor`, `/canva`, `/submit`, `/interview` |
+| `personal-form-defaults.local.md` | Contact and form answers (**git-ignored**; this fork is public) | `/submit` |
+
+Search sites, company lists and filters for `/scrape` live in [`.claude/skills/job-scraper/search-queries.md`](.claude/skills/job-scraper/search-queries.md).
 
 ## Does it actually work?
 
@@ -374,7 +472,14 @@ ai-job-search/
 │   │   ├── interview.md               # /interview stage-specific prep pack + mock interview
 │   │   ├── html-report.md             # /html-report generate application tracker dashboard
 │   │   ├── notion-sync.md             # /notion-sync one-way pipeline view in a Notion database
-│   │   └── reset.md                   # /reset wipe profile data or documents folder
+│   │   ├── reset.md                   # /reset wipe profile data or documents folder
+│   │   ├── tailor.md                  # (fork) /tailor pipeline step 2: tailored CV text into Notion
+│   │   ├── canva.md                   # (fork) /canva pipeline step 3: Canva resume + PDF upload
+│   │   └── submit.md                  # (fork) /submit pipeline step 4: fill form, stop before Submit
+│   ├── agents/                        # Sub-agents started by commands (never typed)
+│   │   ├── posting-fetcher.md         # /apply Step 0: fetch one posting + integrity gate
+│   │   ├── posting-scorer.md          # /rank Step 2: fetch and score a batch of postings
+│   │   └── application-reviewer.md    # /apply Step 3: hiring-manager critique of drafts
 │   ├── skills/
 │   │   ├── job-application-assistant/  # Core application skill
 │   │   │   ├── SKILL.md               # Skill definition
@@ -384,8 +489,12 @@ ai-job-search/
 │   │   │   ├── 04-job-evaluation.md   # Scoring framework for job fit
 │   │   │   ├── 05-cv-templates.md     # LaTeX CV structure + tailoring rules
 │   │   │   ├── 06-cover-letter-templates.md # LaTeX cover letter templates
-│   │   │   └── 07-interview-prep.md   # STAR examples + interview framework
-│   │   ├── job-scraper/               # Job search orchestration
+│   │   │   ├── 07-interview-prep.md   # STAR examples + interview framework
+│   │   │   ├── 08-application-forms.md # Filling live application forms (never Submit)
+│   │   │   ├── 09-web-research.md     # Untrusted-posting rules, safe fetching
+│   │   │   ├── 10-notion-pipeline.md  # (fork) Notion IDs, five-step pipeline, write limits
+│   │   │   └── personal-form-defaults.local.md # (fork, git-ignored) form answers
+│   │   ├── job-scraper/               # /scrape: SKILL.md + search-queries.md (sites, companies, filters)
 │   │   └── upskill/                   # /upskill skill gap analysis and learning plan
 │   └── settings.json                  # Claude Code permissions (shared, scoped)
 ├── .agents/skills/                    # Job portal CLI tools

@@ -20,7 +20,7 @@ Run through `/canva` (pipeline step 3 - see `10-notion-pipeline.md`). It prepare
 |----------------|---------------------|
 | Decision Engine, SME Credit Decision | `DAHW1Fbxau8` (2 pages) |
 | Consumer Lending | `DAHW099RtmM` |
-| General AI Agent (Ship Fast) | `DAHW1jC0G8Y` |
+| General AI Agent (Ship Fast) | `DAHW2GPaims` (latest, from 2026-11-06; old `DAHW1jC0G8Y` is outdated) |
 
 ### Steps per application
 
