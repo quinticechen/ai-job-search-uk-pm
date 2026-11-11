@@ -48,7 +48,7 @@ Read `search-queries.md` (this directory) for the search strategy. `tools/scrape
 
 Read `search-queries.md` (this directory) for the search strategy. By default, run the top 3 priority query categories. If the user said "broad", run all categories. If the user specified a focus area (e.g. "data science"), prioritize queries from that category.
 
-**Use the installed CLI tools as the primary search mechanism.** Fall back to `WebSearch` only for portals that do not have a CLI skill, or if `bun` is unavailable on the system.
+**Use the installed CLI tools as the primary search mechanism.** Fall back to `WebSearch` only for portals that do not have a CLI skill, or if neither `bun` nor Node 22.6+ is available on the system.
 
 #### 1a. Check bun availability
 
@@ -56,7 +56,21 @@ Read `search-queries.md` (this directory) for the search strategy. By default, r
 bun --version
 ```
 
-If this fails (bun not installed), skip to **1c (WebSearch fallback)** for all portals and note the fallback in the Step 5 output.
+If this fails (bun not installed), check Node instead (this fork):
+
+```bash
+node --version
+```
+
+If Node is **v22.6 or newer**, run every portal CLI on Node: in each portal's documented command, replace `bun run` with
+
+```bash
+node --experimental-strip-types --disable-warning=ExperimentalWarning --import ./tools/node_ts_loader.mjs
+```
+
+and keep the rest of the command (CLI path, flags) exactly as documented. Example: `node --experimental-strip-types --disable-warning=ExperimentalWarning --import ./tools/node_ts_loader.mjs .agents/skills/freehire-search/cli/src/cli.ts search -q "title:product manager" --country GB,CZ --jobage 14 --format json`. Output and exit codes are the same as under bun. These Node calls are not pre-approved in `settings.json`, so expect a permission prompt.
+
+Only if neither bun nor Node 22.6+ is available, skip to **1c (WebSearch fallback)** for all portals and note the fallback in the Step 5 output.
 
 #### 1b. Run CLI tools (primary — run these in parallel where possible)
 
@@ -66,7 +80,7 @@ Discover all installed portal CLI skills by reading every `SKILL.md` found under
 
 For each **enabled** portal skill:
 
-1. Read its `SKILL.md` to find the correct `bun run …` invocation and supported flags.
+1. Read its `SKILL.md` to find the correct `bun run …` invocation and supported flags (on Node, swap `bun run` as described in 1a).
 2. Translate the query terms from `search-queries.md` into that portal's flag format (e.g. `--key`, `--search-string`, `--query`, filter codes — whatever the portal's SKILL.md specifies).
 3. Scope to the last 14 days using the portal's supported recency **filter** flag (`--jobage`, `--since <YYYY-MM-DD>`, etc. — as documented per portal). A portal with **no recency flag** (jobdanmark offers none) still gets scoped: every portal's search output carries a `date` field, so filter client-side — drop results whose `date` is older than 14 days after the call returns, and never invent a flag the portal's SKILL.md does not document (the CLIs reject unknown flags). `--order PublicationDate` is a sort, and a sort is not a filter — pairing it with a `--limit` is a defensible approximation on a portal that offers nothing better (jobnet), but apply the client-side date filter on top all the same.
 4. Cap results to ~20 per call using the portal's limit flag.
@@ -81,7 +95,7 @@ If a CLI tool exits with a non-zero code, log the error message and continue —
 Use `WebSearch` for:
 - Portals listed in `search-queries.md` that do **not** have a corresponding directory under `.agents/skills/`
 - Any portal whose CLI fails at runtime
-- When bun is unavailable (Step 1a failed)
+- When neither bun nor Node 22.6+ is available (Step 1a failed)
 
 Use the site-specific query strings from `search-queries.md` directly as WebSearch queries for these portals.
 
@@ -89,9 +103,9 @@ Tag each fallback result as WebSearch-sourced, keeping the portal tag when the f
 
 #### 1d. Official careers sweep (UK PM fork - run every time)
 
-Get today's date first (`date`). Then run `search-queries.md` **Step A**: check every core-ring company's own careers site or ATS board for product roles in the UK or the Czech Republic (London first) (Product Manager / Product Owner / Senior PM), using the ATS endpoints and the Built In London fallback listed there. Open the wider ring only after the core ring is exhausted. Any role still live on the official site counts, whatever its posting date. Record every company whose board and Built In page both failed, for the "Not reachable" line in Step 5.
+Get today's date first (`date`). Then run `search-queries.md` **Step A**: check every core-ring company's own careers site or ATS board for product roles in the UK or the Czech Republic (London first), plus EU and US roles that pass the Visa sponsorship rule (Product Manager / Product Owner / Senior PM), using the ATS endpoints and the Built In London fallback listed there. Open the wider ring only after the core ring is exhausted. Any role still live on the official site counts, whatever its posting date. Record every company whose board and Built In page both failed, for the "Not reachable" line in Step 5.
 
-Then run `search-queries.md` **Step B** (Indeed connector with country `GB`, WebSearch, Built In London) for the listed terms. Aggregator hits are leads only: confirm each on the company's own site and store the official posting URL. Tag sweep results `"source": "websearch"` and `"portal": "official-careers"` so Step 4 records where they came from.
+Then run `search-queries.md` **Step B** (Indeed connector with country `GB`, WebSearch, Built In London) for the listed terms, then the Czech searches, then the "EU and US with sponsorship" searches. Aggregator hits are leads only: confirm each on the company's own site and store the official posting URL. Tag sweep results `"source": "websearch"` and `"portal": "official-careers"` so Step 4 records where they came from.
 
 ### Step 2: Fetch & Parse
 
@@ -320,7 +334,7 @@ For each role the Resume Estimate marks **Suitable**, create one row in `collect
 - Work Type (Hybrid / Remote / On-site), Headquartered, Salary (as stated, else "Not stated")
 - Leave Status empty.
 
-Page body: category, score table (skill, weight, score, resume evidence), conclusion, and caveats (seniority stretch, in-office, start-date flag, email-only application, etc.).
+Page body: category, score table (skill, weight, score, resume evidence), conclusion, and caveats (seniority stretch, in-office, start-date flag, email-only application, etc.). For EU (outside CZ) and US roles, add the Sponsorship value and its evidence (see "Visa sponsorship rule" in `search-queries.md`).
 
 Then write one "Job digest - <YYYY-MM-DD>" page under the Job Hunting page listing every role found: Suitable ones with score, Not suitable ones with a one-line reason, and the "Not reachable" companies.
 
@@ -332,7 +346,7 @@ Then write one "Job digest - <YYYY-MM-DD>" page under the Job Hunting page listi
 
 1. **Never fabricate job postings.** Only present jobs from actual CLI search/detail output or WebSearch/WebFetch results.
 2. **Respect deduplication.** Always check job_scraper/seen_jobs.json AND job_search_tracker.csv before presenting.
-3. **Focus on the two markets.** Keep roles in the UK (London first) or the Czech Republic (any work type). Skip roles based anywhere else (including Taiwan), roles needing visa sponsorship, and roles whose stated salary tops out below the floor in `search-queries.md`.
+3. **Focus on the target markets.** Keep roles in the UK (London first) or the Czech Republic (any work type), then EU and US roles whose Sponsorship is Stated or Likely (see "Visa sponsorship rule" in `search-queries.md`). Skip roles based anywhere else (including Taiwan), EU/US roles with no sponsorship evidence, and roles whose stated salary tops out below the target band in `search-queries.md`.
 4. **Only open positions.** Skip postings with expired deadlines or those marked as closed.
 5. **Be efficient with detail fetches.** Don't run `detail` or WebFetch on every search hit — pre-filter by title/snippet, then fetch only promising matches.
 6. **Parallel searches.** Run portal CLI searches in parallel; use WebSearch only for gaps the CLIs don't cover.

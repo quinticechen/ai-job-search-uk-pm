@@ -2,14 +2,7 @@
 name: freehire-search
 version: 1.0.0
 description: >
-  Use this skill to search live software / tech / data / engineering job listings
-  across many countries and markets (and remote) via the freehire.me aggregator's
-  public API, or to look up a specific posting. It aggregates roles from ~50 ATS
-  platforms into one schema, so a single skill covers many markets — but its faceted
-  filtering (skills, category, seniority) is tuned tech-first, so scope triggers to
-  technical roles. Trigger phrases: find a tech job, software job search, developer
-  jobs, engineering vacancies, data/ML jobs, DevOps roles, remote developer jobs,
-  "are there any <tech role> jobs in <place>", look up this freehire job posting.
+  Use this skill to search live software / product manager / tech / data / product builder job listings across many countries and markets (and remote) via the freehire.me aggregator's public API, or to look up a specific posting. In this fork it is the main source for Product Manager roles in the UK and Czech Republic and for EU / US roles that offer visa sponsorship (it can filter on sponsorship and on public sponsor registers). It aggregates roles from ~50 ATS platforms into one schema, so a single skill covers many markets — but its faceted filtering (skills, category, seniority) is tuned tech-first, so scope triggers to technical roles. Trigger phrases: find a tech job, software job search, product manager jobs with visa sponsorship, developer jobs, engineering vacancies, data/ML jobs, DevOps roles, remote developer jobs, "are there any <tech role> jobs in <place>", look up this freehire job posting.
 context: fork
 enabled: true  # set to false to keep this portal installed but have /scrape skip it
 allowed-tools: Bash(bun run .agents/skills/freehire-search/cli/src/cli.ts *)
@@ -64,12 +57,46 @@ mirror (millions of postings across ~50 platforms) is resource-heavy — a
 self-hoster would either crawl a scoped subset of sources or point the env var back
 at the hosted API.
 
+## This fork: standard searches (UK / CZ, then sponsored EU and US)
+
+Product roles are covered even though this skill's facets are tuned for tech: use `title:` queries so only PM titles match. One query string for all searches:
+
+```
+-q "title:product manager OR title:product owner OR title:product operations OR title:AI product manager OR title:technical product manager"
+```
+
+Run in this order with `--jobage 14 --limit 25` (add `--no-description` for a cheap first pass). The search a hit came from is its sponsorship evidence, because the CLI's output doesn't include freehire's visa fields:
+
+| # | Market | Flags | Sponsorship evidence |
+|---|--------|-------|----------------------|
+| 1 | UK + Czech Republic | `--country GB,CZ` | Not needed |
+| 2 | EU, posting says it sponsors | `--region eu --facet visa_sponsorship=true` | **Stated** - freehire's AI read of the posting; confirm the wording in the official posting |
+| 3 | EU, known sponsor | `--region eu --facet collections=nl-recognised-sponsor` | **Likely** - Netherlands IND recognised-sponsor register |
+| 4 | US, posting says it sponsors | `--country US --facet visa_sponsorship=true` | **Stated** - confirm the wording in the official posting |
+| 5 | US, known sponsor | `--country US --facet collections=us-h1b-sponsor` | **Likely** - H-1B approvals on the USCIS register |
+
+Notes:
+- `--region eu` here means Europe broadly: it excludes the UK but includes non-EU countries (e.g. Switzerland, Norway, Ukraine). Drop hits outside the EU, and drop GB / CZ hits already covered by search 1.
+- A hit in several searches keeps its strongest evidence (Stated beats Likely).
+- `uk-skilled-worker-sponsor` exists too, but UK roles don't need sponsorship, so don't filter on it.
+- Apply the "Visa sponsorship rule", salary bands and other filters in `.claude/skills/job-scraper/search-queries.md` to every hit.
+
 ## When to use this skill
 
 - Search for tech job openings by keyword, in a given region/country or remotely —
   each result comes back with its **full description**, no per-hit follow-up needed
 - Filter by seniority, category, skills, or recency (posted within N days)
 - Look one freehire posting up by its slug (including a closed one)
+
+## Running without Bun (this fork)
+
+If `bun` isn't installed, Node 22.6+ runs the same CLI with no extra packages. Replace `bun run` with the Node prefix; everything after it stays the same:
+
+```bash
+node --experimental-strip-types --disable-warning=ExperimentalWarning --import ./tools/node_ts_loader.mjs .agents/skills/freehire-search/cli/src/cli.ts search ...
+```
+
+Run it from the repo root. `tools/node_ts_loader.mjs` only maps the CLI's `./x.js` imports to the `.ts` files on disk.
 
 ## Commands
 

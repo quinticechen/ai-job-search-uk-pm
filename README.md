@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-  <a href="#this-fork-uk--czech-republic-product-manager-search"><b>This fork</b></a>
+  <a href="#this-fork-uk--czech-republic--sponsored-euus-product-manager-search"><b>This fork</b></a>
   &nbsp;&nbsp;&nbsp;
   <a href="#quick-start"><b>Quick start</b></a>
   &nbsp;&nbsp;&nbsp;
@@ -39,9 +39,9 @@
 >
 > This project has **no affiliated cryptocurrency, token, or paid sponsorship program**. Anything claiming otherwise is unauthorized and should be treated as a scam. The only ways to support the project are the Ko-fi link below and contributing on GitHub.
 
-## This fork: UK / Czech Republic Product Manager search
+## This fork: UK / Czech Republic / sponsored EU+US Product Manager search
 
-This fork targets Product Manager roles in London and the wider UK first, then the Czech Republic. It replaces the upstream local tracker with a **Notion Applications database** as the record of every application, and builds CVs in **Canva** instead of LaTeX. Pipeline rules, Notion IDs and write limits: [`10-notion-pipeline.md`](.claude/skills/job-application-assistant/10-notion-pipeline.md).
+This fork targets Product Manager roles in London and the wider UK first, then the Czech Republic, then other EU countries and the US **only where the employer sponsors the visa** (see "Visa sponsorship rule" in [`search-queries.md`](.claude/skills/job-scraper/search-queries.md)). It replaces the upstream local tracker with a **Notion Applications database** as the record of every application, and builds CVs in **Canva** instead of LaTeX. Pipeline rules, Notion IDs and write limits: [`10-notion-pipeline.md`](.claude/skills/job-application-assistant/10-notion-pipeline.md).
 
 > [!IMPORTANT]
 > Start Claude Code **from this folder** (`cd ai-job-search-uk-pm && claude`). Claude Code loads `.claude/commands`, `.claude/skills`, `.claude/agents`, `CLAUDE.md` and `.claude/settings.json` only from the folder it starts in. Started from a parent folder, `/tailor`, `/canva` and the rest don't exist.
@@ -53,7 +53,7 @@ This fork targets Product Manager roles in London and the wider UK first, then t
 | **Command** | `.claude/commands/<name>.md` | You type `/<name>`. One file = one command. |
 | **Skill** | `.claude/skills/<name>/SKILL.md` + reference files | Claude loads it when your request matches its description, or when you type its name (`/scrape`, `/upskill`). Several commands also read a skill's reference files. |
 | **Agent** (sub-agent) | `.claude/agents/<name>.md` | Never typed. A command starts it to do one isolated job (fetch, score, review) and gets text back. |
-| **Portal CLI** | `.agents/skills/<name>-search/` | A small Bun program that searches one job board. `/scrape` calls it; `enabled:` in its `SKILL.md` turns it on or off. |
+| **Portal CLI** | `.agents/skills/<name>-search/` | A small TypeScript program that searches one job board. Runs on Bun, or on Node 22.6+ with no install via `tools/node_ts_loader.mjs` (see `job-scraper/SKILL.md` Step 1a). `/scrape` calls it; `enabled:` in its `SKILL.md` turns it on or off. |
 
 So a skill is **not** the same as a command. `/scrape` and `/upskill` are skills you can call like commands. `job-application-assistant` is a skill with no command of its own: it's a library of reference files (`01`–`10`) that the commands below read.
 
@@ -64,6 +64,7 @@ So a skill is **not** the same as a command. `/scrape` and `/upskill` are skills
 | # | Run | What it does | Reads | Notion status after |
 |---|---|---|---|---|
 | 1 | `/scrape` (skill `job-scraper`) | Searches company careers pages, job boards and portal CLIs; scores fit; adds suitable roles to Notion | `job-scraper/SKILL.md`, `search-queries.md`, `04-job-evaluation.md`, `09-web-research.md`, `10-notion-pipeline.md`, portal CLIs `linkedin-search`, `freehire-search` | Stage `Ready to Apply` |
+| 1b | `/add-job <url or pasted JD>` | Scores one posting you found elsewhere with the same rules as `/scrape` and adds it to Notion if suitable | `add-job.md`, then the same files as `/scrape` (it points to their sections and copies no rules), `posting-fetcher` agent | Stage `Ready to Apply` |
 | 2 | `/tailor [company]` | Writes tailored headline, summary and bullets into the row's `## Tailored CV` section | `tailor.md`, `01-candidate-profile.md`, `03-writing-style.md`, `04-job-evaluation.md`, `05-cv-templates.md`, `09-web-research.md`, `10-notion-pipeline.md`, Notion resume pages + STAR Stories | `CV Drafted 📝` / `Needs Input ✋` |
 | – | *(you)* | Review and edit the draft in Notion | – | you set `CV Approved ✅` |
 | 3 | `/canva [company]` | Copies the Canva master, fills in the approved text, exports the PDF, uploads it to the row | `canva.md`, `05-cv-templates.md` (Canva section), `10-notion-pipeline.md`, `tools/verify_pdf.py` | `CV Ready 📄` / `Blocked` |
@@ -113,8 +114,8 @@ These write to `job_search_tracker.csv` or `documents/applications/`, which this
 
 | CLI | Status |
 |---|---|
-| `linkedin-search` | On. London, United Kingdom and Czechia; at most 3 searches per run |
-| `freehire-search` | On. `--country GB,CZ` |
+| `linkedin-search` | On. London, United Kingdom and Czechia, plus optional EU / US "visa sponsorship" searches; at most 5 searches per run |
+| `freehire-search` | On. Main source: `--country GB,CZ`, then EU / US with `visa_sponsorship=true` or sponsor-register filters (`us-h1b-sponsor`, `nl-recognised-sponsor`) |
 | `jobindex-search`, `jobnet-search`, `jobbank-search`, `jobdanmark-search` | Off (Danish upstream demos) |
 
 ### Reference files (`.claude/skills/job-application-assistant/`)
@@ -124,13 +125,13 @@ These write to `job_search_tracker.csv` or `documents/applications/`, which this
 | `01-candidate-profile.md` | Education, experience, skills, official-title rule | `/tailor`, `/interview`, `/upskill`, `/expand`, `/rank`, `/apply` |
 | `02-behavioral-profile.md` | Working-style profile | `/interview`, `/expand`, `/apply` |
 | `03-writing-style.md` | UK English, tone, no em-dashes | `/tailor`, `/outcome`, `/apply` |
-| `04-job-evaluation.md` | Resume versions, Resume Estimate scoring, seniority/location/salary gates | `/scrape`, `/tailor`, `/interview`, `/rank`, `/upskill`, `/outcome`, `/apply` |
+| `04-job-evaluation.md` | Resume versions, Resume Estimate scoring, seniority/location/salary gates | `/scrape`, `/add-job`, `/tailor`, `/interview`, `/rank`, `/upskill`, `/outcome`, `/apply` |
 | `05-cv-templates.md` | Canva workflow (primary); LaTeX (fallback) | `/tailor`, `/canva`, `/apply`, `/add-template` |
 | `06-cover-letter-templates.md` | LaTeX cover letters | `/apply`, `/add-template` |
 | `07-interview-prep.md` | STAR framework, mock interview protocol | `/interview` |
 | `08-application-forms.md` | Filling live forms, never clicking Submit | `/submit`, `/apply` |
 | `09-web-research.md` | Postings are untrusted data; safe fetching | nearly every command and all agents |
-| `10-notion-pipeline.md` | Notion IDs, the five steps, statuses, write limits | `/scrape`, `/tailor`, `/canva`, `/submit`, `/interview` |
+| `10-notion-pipeline.md` | Notion IDs, the five steps, statuses, write limits | `/scrape`, `/add-job`, `/tailor`, `/canva`, `/submit`, `/interview` |
 | `personal-form-defaults.local.md` | Contact and form answers (**git-ignored**; this fork is public) | `/submit` |
 
 Search sites, company lists and filters for `/scrape` live in [`.claude/skills/job-scraper/search-queries.md`](.claude/skills/job-scraper/search-queries.md).
@@ -473,6 +474,7 @@ ai-job-search/
 │   │   ├── html-report.md             # /html-report generate application tracker dashboard
 │   │   ├── notion-sync.md             # /notion-sync one-way pipeline view in a Notion database
 │   │   ├── reset.md                   # /reset wipe profile data or documents folder
+│   │   ├── add-job.md                 # (fork) /add-job: score one posting found elsewhere, add it to Notion
 │   │   ├── tailor.md                  # (fork) /tailor pipeline step 2: tailored CV text into Notion
 │   │   ├── canva.md                   # (fork) /canva pipeline step 3: Canva resume + PDF upload
 │   │   └── submit.md                  # (fork) /submit pipeline step 4: fill form, stop before Submit
@@ -529,6 +531,7 @@ ai-job-search/
 │   ├── fetch_page.py                  # GET-only browser-header retry for 403s (robots.txt enforced)
 │   ├── install_portal_clis.py         # Install every discovered portal CLI (bun install)
 │   ├── lint_skills.py                 # CI lint for skills, commands, settings.json
+│   ├── node_ts_loader.mjs             # (fork) run portal CLIs on Node when Bun isn't installed
 │   ├── posting_guard.py               # Integrity gate: strip hidden text, flag injection-shaped lines
 │   ├── robots_check.py                # Gate the browser-header retry against robots.txt
 │   ├── security_guards.py             # CI guards: permission allow/ask/deny, skill grants, gitignore, manifests

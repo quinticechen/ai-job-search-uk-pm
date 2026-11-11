@@ -16,6 +16,7 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 The Notion Applications DB is the record of every application; full rules in `.claude/skills/job-application-assistant/10-notion-pipeline.md`.
 
 1. `/scrape` - find roles, add suitable ones to Notion (Stage = Ready to Apply)
+   - `/add-job <url or pasted JD>` - same check and same row for one role found on another site
 2. `/tailor` - write tailored resume content into each row (Status = CV Drafted 📝); she reviews, edits and sets CV Approved ✅
 3. `/canva` - build the approved content in Canva, export the PDF, upload it to the row (Status = CV Ready 📄)
 4. `/submit` - fill the application in the browser and stop before Submit (Status = Ready to Submit); after she submits, `/submit confirm <company>` sets Stage = Sent CV 💌
@@ -28,9 +29,9 @@ The Notion Applications DB is the record of every application; full rules in `.c
 ### Identity
 - **Name:** Quintice Chen
 - **Target:** Product Manager roles (PM / Product Owner / Senior PM) with an AI or credit-decisioning focus
-- **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote)
-- **Salary floor:** UK above £80,000; Europe above €90,000 (gross annual base)
-- **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic
+- **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote); other EU countries and the US only with employer visa sponsorship
+- **Target salary band:** UK £70,000-£110,000; Europe €80,000-€115,000; US $140,000-$200,000 (gross annual base). Asks on application forms: £80,000-£85,000 / €85,000-€90,000 / $150,000
+- **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic; needs sponsorship elsewhere in the EU and in the US (see "Visa sponsorship rule" in `.claude/skills/job-scraper/search-queries.md`)
 - **Languages:**
   | Language | Level |
   |----------|-------|
@@ -101,8 +102,8 @@ Full company lists and categories: `.claude/skills/job-scraper/search-queries.md
 ### Deal-breakers
 <!-- Hard constraints on job search. Language requirements are handled separately and
 automatically from your Languages table above - don't duplicate them here. -->
-- Roles based outside the UK and the Czech Republic (including Taiwan), or needing visa sponsorship
-- Stated salary below the floor (UK £80,000; Europe €90,000)
+- Roles outside the UK and the Czech Republic, unless they are in the EU or US **and** the employer sponsors the visa (Stated, or Likely from a public sponsor register); never Taiwan
+- Stated salary whose top end is below the band (UK £70,000; Europe €80,000; US $140,000)
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years
 - Pure engineering, data-science or credit-risk-analyst roles
 

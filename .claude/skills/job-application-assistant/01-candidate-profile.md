@@ -8,7 +8,7 @@ framework_version: 1.1.1
 
 ## Identity
 - **Name:** Quintice Chen (legal name Hsiao Ching Chen)
-- **Location:** London, United Kingdom first; open to roles anywhere in the UK or the Czech Republic (no sponsorship needed in either)
+- **Location:** London, United Kingdom first; open to roles anywhere in the UK or the Czech Republic (no sponsorship needed in either); also other EU countries and the US when the employer sponsors the visa
 - **Phone:** see `personal-form-defaults.local.md`
 - **Email:** quinticechen@gmail.com
 - **LinkedIn:** https://www.linkedin.com/in/quintice-chen/
@@ -35,7 +35,7 @@ framework_version: 1.1.1
 
 ## Professional Experience
 
-Years of PM experience: the resumes say "4+ yrs" (Decision Engine, Consumer Lending) and "5+ yrs" (General); the job-search digest uses ~4.5 years full-time PM. Use the number on the resume version being submitted.
+Years of PM experience: 4.5+ yrs full-time PM (Decision Engine, Consumer Lending, General)
 
 **Official job titles - never change them on a CV.** The official title is the part before the brackets (e.g. "AI Product Manager", "Product Manager"). The text inside the brackets is an industry description: it may be adjusted to fit the target role, e.g. "(Fintech / Lending Underwriting)" or "(Fintech/SME Lending)", as long as it stays true.
 

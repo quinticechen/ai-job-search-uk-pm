@@ -30,7 +30,7 @@ If the candidate's permit also constrains *hours* or *start date* (a student vis
 
 A role that fails this gate is not scored and not drafted. Everything below applies only to roles that pass it.
 
-**This candidate:** holds work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. "Must have the right to work in <one of these>" is a PASS. Roles in any other country (including Taiwan), roles that require sponsorship, and US-citizen-only or security-clearance roles FAIL.
+**This candidate:** holds work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. "Must have the right to work in <one of these>" is a PASS. Other EU countries and the US pass **only with employer visa sponsorship**: apply the "Visa sponsorship rule" in `.claude/skills/job-scraper/search-queries.md` (Stated or Likely = PASS; None = FAIL) and record the Sponsorship value in the caveats. "Must already have the right to work in <EU country / US>", citizen / green-card-only, security-clearance roles, and roles in any other country (including Taiwan) FAIL.
 **Start-date gate (UK roles):** if a UK posting says it needs someone to start before January 2027, **FLAG it, don't fail it** - score it normally and put the start date in the caveats.
 
 ## Seniority Gate - run before scoring
@@ -148,9 +148,10 @@ Does the role and company culture match the behavioral profile?
 
 ### 4. Location & Logistics (Pass/Fail + Notes)
 - Anywhere in the UK or the Czech Republic (hybrid, on-site or remote): PASS (London is first priority; note it as a plus)
-- Based in any other country (including Taiwan), or remote restricted to another country: FAIL (deal-breaker)
+- Other EU countries or the US with Sponsorship = Stated or Likely: PASS (ranked after UK and Czech roles; caveat states the sponsorship evidence)
+- EU / US with Sponsorship = None, any other country (including Taiwan and non-EU Europe), or remote restricted to a country she can't work in: FAIL (deal-breaker)
 
-**Salary floor (gross annual base):** UK above £80,000; Europe (incl. Czech Republic) above €90,000. A stated salary whose top end is below the floor makes the role **Not suitable** regardless of the Resume Estimate. If no salary is stated, record "Not stated" and carry on - never estimate one.
+**Target salary band (gross annual base):** UK £70,000-£110,000; Europe (EU incl. Czech Republic) €80,000-€115,000; US $140,000-$200,000. A stated salary whose top end is below the band's minimum makes the role **Not suitable** regardless of the Resume Estimate. A stated salary entirely above the band is kept with the caveat "pays above target band - check seniority". If no salary is stated, record "Not stated" and carry on - never estimate one.
 - Fully in-office: FLAG (caveat)
 - Frequent international travel: FLAG (discuss with user)
 
@@ -176,7 +177,7 @@ Does this role advance career goals and contain tasks that energize?
 
 **Life situation alignment:** Consider personal constraints:
 - **Security**: UK right to work starts January 2027, so UK roles start January 2027 at the earliest
-- **Flexibility**: open to relocating anywhere in the UK or the Czech Republic; London first
+- **Flexibility**: open to relocating anywhere in the UK or the Czech Republic (London first), or to another EU country or the US when the employer sponsors the visa
 - **Professional development**: deeper credit-decisioning and AI product experience, ideally in the UK market
 
 ### 6. Salary Benchmark (Optional)

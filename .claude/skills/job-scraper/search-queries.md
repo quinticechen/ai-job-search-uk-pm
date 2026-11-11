@@ -1,8 +1,12 @@
 # Search Queries for Job Scraper
 
-Market: **United Kingdom** and **Czech Republic** only — no employer sponsorship needed in either, London first. Hybrid, on-site or remote all accepted. **No Taiwan roles.**
+Market, in priority order (Hybrid, on-site or remote all accepted; **no Taiwan roles**):
+1. **United Kingdom** - London first. No sponsorship needed.
+2. **Czech Republic** - no sponsorship needed.
+3. **Other EU countries** - only roles that offer visa sponsorship (see "Visa sponsorship rule" below).
+4. **United States** - only roles that offer visa sponsorship.
 
-Salary floor: **UK > £80,000**, **Europe (incl. Czech Republic) > €90,000** a year (see "Salary Filter" below).
+Target salary band (gross annual base): **UK £70,000-£110,000**, **Europe (EU incl. Czech Republic) €80,000-€115,000**, **US $140,000-$200,000** (see "Salary Filter" below).
 Function: **Product Manager** (Product Manager / Product Owner / Senior Product Manager / Product Operation Manager / AI Product Manager / Technical Product Manager), with an AI / decisioning focus.
 
 Source of truth for this strategy: the Notion skill page "Job search digest"
@@ -12,10 +16,25 @@ Source of truth for this strategy: the Notion skill page "Job search digest"
 
 `/scrape` runs these portal CLIs first:
 
-- **linkedin-search** - in priority order: `--location "London, United Kingdom"`, `"United Kingdom"` (UK-wide and remote-UK), `"Czechia"`. Max 3 searches per run (see its SKILL.md).
-- **freehire-search** - pass `--country GB,CZ` (never `--region eu`: `eu` excludes the UK).
+- **freehire-search** - the main tool for the visa markets. Its "This fork: standard searches" table runs UK + CZ (`--country GB,CZ`), then EU and US with sponsorship filters (`--facet visa_sponsorship=true` for "posting says it sponsors", `--facet collections=us-h1b-sponsor` / `nl-recognised-sponsor` for "company is a known sponsor").
+- **linkedin-search** - in priority order: `--location "London, United Kingdom"`, `"United Kingdom"` (UK-wide and remote-UK), `"Czechia"`, then optionally one EU and one US search with "visa sponsorship" in the query. Max 5 searches per run (see its SKILL.md).
 
-**Market priority:** London → rest of UK / remote-UK → Czech Republic. When a run is short on time or volume, cut from the end of that list.
+**Market priority:** London → rest of UK / remote-UK → Czech Republic → EU with sponsorship → US with sponsorship. When a run is short on time or volume, cut from the end of that list.
+
+## Visa sponsorship rule (EU outside CZ, and US)
+
+UK and Czech Republic roles never need this check. For every other EU role and every US role, record a **Sponsorship** value from the official posting and public registers:
+
+| Sponsorship | Evidence | Result |
+|---|---|---|
+| **Stated** | The posting says it sponsors visas, supports work permits / EU Blue Card / H-1B (incl. transfer), or offers relocation with visa support | PASS |
+| **Likely** | The posting is silent, but the company is on a public sponsor register: US - [USCIS H-1B Employer Data Hub](https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub) approvals in the last 3 years (freehire collection `us-h1b-sponsor`); Netherlands - [IND public register of recognised sponsors](https://ind.nl/en/public-register-recognised-sponsors) (freehire collection `nl-recognised-sponsor`) | PASS, with caveat "sponsorship likely (register), not stated - confirm with the recruiter" |
+| **None** | The posting says no sponsorship, "must already have the right to work in <country>", citizens / green-card holders only, or security clearance required; or it is silent and the company is on no register | FAIL (deal-breaker) |
+
+- freehire's `visa_sponsorship=true` comes from an AI reading of the posting. Confirm the wording in the official posting before recording **Stated**; if the posting doesn't say it, fall back to the register check.
+- Other EU countries have no public sponsor register, so only **Stated** passes there.
+- US caveat: most first-time H-1B visas go through the March registration lottery with an October start. Note it in caveats for US roles that don't name another route.
+- Write the Sponsorship value in the row's `## Fit score` caveats (e.g. "Sponsorship: Stated - 'we sponsor visas' in posting").
 
 The `site:` query templates in this file are the **WebSearch fallback** and the **broad search** (Step 3 below). Aggregator hits are leads only: confirm every role on the company's own careers site before it counts.
 
@@ -24,7 +43,7 @@ The `site:` query templates in this file are the **WebSearch fallback** and the 
 ## Candidate snapshot (for query design)
 
 - AI Product Manager, ~4.5 years full-time PM. Positioning: "AI Product Manager · Credit Decisioning" - application-layer AI in decisioning / underwriting workflows, not model building.
-- Work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. Open to relocating anywhere in either country. London is first priority.
+- Work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. Open to relocating anywhere in either country. London is first priority. Also open to other EU countries and the US **when the employer sponsors the visa**.
 - Seniority: strong in the mid-level PM pool (2-5 years asked). Senior PM asking 4-6 years is a stretch but allowed. **Skip** Head / Director / Principal / Staff, and Senior roles demanding 6+ years.
 - Ideal employer: licensed lender or credit vendor, 50-500 people, with its own credit/underwriting product team, a decisioning team, or document intelligence actively putting AI into document intake or decisioning.
 - **Search narrow-to-wide:** run the core ring first; open the wider rings only after the core is exhausted.
@@ -41,7 +60,7 @@ Every role found is tagged with one category. The category picks the resume vers
 
 ## Step A - Official careers sweep (run every time)
 
-Check each company's own careers site or ATS board. Look only for product roles (Product Manager / Product Owner / Senior PM) based in the UK or the Czech Republic (any work type). Most companies below are UK-based; a Prague office of the same company counts too. Include any role still live on the official site, **whatever its posting date** (the 14-day window below does not apply to this sweep).
+Check each company's own careers site or ATS board. Look only for product roles (Product Manager / Product Owner / Senior PM) based in the UK or the Czech Republic (any work type). Most companies below are UK-based; a Prague office of the same company counts too. Roles at these companies in other EU countries or the US (e.g. Taktile Berlin / New York, Zest AI, FICO, Experian US) count only if they pass the Visa sponsorship rule. Include any role still live on the official site, **whatever its posting date** (the 14-day window below does not apply to this sweep).
 
 ATS endpoints to try, in order:
 - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/<co>/jobs`
@@ -79,6 +98,18 @@ site:jobs.cz "product manager" Praha
 site:startupjobs.cz "product manager"
 site:linkedin.com/jobs "product manager" fintech OR AI Prague
 ```
+
+**EU and US with sponsorship** (after the UK and Czech searches): run freehire's visa searches first, then these:
+
+```
+"product manager" "visa sponsorship" fintech OR lending OR AI Berlin OR Amsterdam OR Dublin
+"product manager" "relocation" "visa" fintech Europe
+site:linkedin.com/jobs "product manager" "visa sponsorship" Germany OR Netherlands OR Ireland
+"product manager" "H-1B" OR "visa sponsorship" fintech OR lending OR "credit decisioning"
+site:linkedin.com/jobs "product manager" "will sponsor" "United States"
+```
+
+Then check each lead against the Visa sponsorship rule above.
 
 ### Job sites to search
 
@@ -127,6 +158,18 @@ Czech postings are often in Czech: also search `produktový manažer`, `product 
 | VC portfolio job boards | `site:talent.seedcamp.com`, `site:talent.octopusventures.com`, `site:jobs.balderton.com`, `site:indexventures.com/startup-jobs` | UK/European portfolios; many fintechs |
 | Hacker News "Who is hiring" | `site:news.ycombinator.com "Who is hiring"` + "London" OR "remote (UK)" | Monthly thread |
 
+**Visa sponsorship boards and registers (EU and US)**
+
+| Site | `site:` / how | Notes |
+|------|---------------|-------|
+| freehire.me | `freehire-search` CLI with the visa filters (see its SKILL.md) | Main source; tags register sponsors |
+| Arbeitnow | Public API: `https://www.arbeitnow.com/api/job-board-api?visa_sponsorship=true` (filter titles for "product") | Mostly Germany; free API, link back to the site |
+| Relocate.me | `site:relocate.me` "product manager" | Tech roles with relocation and visa support |
+| Indeed (other countries) | Indeed connector with country `US`, `DE`, `NL`, `IE`, plus "visa sponsorship" in the query | |
+| USCIS H-1B Employer Data Hub | https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub | Register check only, not a job board |
+| MyVisaJobs / H1BGrader | `site:myvisajobs.com` / `site:h1bgrader.com` <company> | Leads for a US company's H-1B history; confirm on the USCIS hub |
+| IND recognised sponsors (NL) | https://ind.nl/en/public-register-recognised-sponsors | Register check only |
+
 **Worldwide remote boards**
 
 | Site | `site:` / how |
@@ -141,7 +184,7 @@ Czech postings are often in Czech: also search `produktový manažer`, `product 
 | EU Remote Jobs | `site:euremotejobs.com` |
 | Jobgether | `site:jobgether.com` OR `site:jobs.lever.co/jobgether` |
 
-**Remote roles must allow employment from the UK or the Czech Republic.** "Remote" does not mean worldwide: check the posting's allowed countries or time zones, and skip roles limited to the US or other countries. A Jobgether or aggregator listing is a lead to the real employer, never the posting itself.
+**Remote roles must allow employment from the UK or the Czech Republic**, or else pass the Visa sponsorship rule for the EU country or US where they employ. "Remote" does not mean worldwide: check the posting's allowed countries or time zones. A Jobgether or aggregator listing is a lead to the real employer, never the posting itself.
 
 ### Priority 1: Decisioning & document intelligence (Category 1)
 
@@ -181,26 +224,31 @@ Title variants to try in any category: Product Manager, Senior Product Manager, 
 ## Location Filter
 
 - **PASS:** anywhere in the UK or the Czech Republic (hybrid, on-site or remote). London ranks first; when two roles score the same, London wins.
-- **FAIL:** roles based in any other country (including Taiwan); remote roles restricted to another country; roles that need local visa sponsorship.
+- **PASS with sponsorship:** other EU countries and the US, when the role's Sponsorship is **Stated** or **Likely** (see "Visa sponsorship rule"). Ranked after UK and Czech roles of the same score.
+- **FAIL:** EU (outside CZ) or US roles with Sponsorship = **None**; roles in any other country (including Taiwan, and non-EU Europe such as Switzerland, Norway or Ukraine); remote roles restricted to a country she can't work in.
 - **FLAG:** frequent international travel, or a fully in-office requirement - note it as a caveat, don't exclude.
 
 ## Hard exclusions
 
-- US-citizen-only or visa-restricted roles the candidate cannot hold.
+- US-citizen-only, green-card-only or security-clearance roles; any EU or US role that says it won't sponsor.
 - Pure engineering, data-science, or credit-risk-analyst roles (not product roles).
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years.
 - **Start date (UK roles):** if a UK role says it needs someone to start before January 2027, **flag it, don't exclude it.**
 
 ## Salary Filter
 
-Floors (gross annual base):
-- UK: **above £80,000**
-- Europe (incl. Czech Republic): **above €90,000** (convert a CZK salary to EUR at today's rate and show the conversion)
+Target bands (gross annual base):
+- UK: **£70,000-£110,000**
+- Europe (EU incl. Czech Republic): **€80,000-€115,000** (convert a CZK or other local salary to EUR at today's rate and show the conversion)
+- United States: **$140,000-$200,000**
 
 Rules:
-- Salary **stated** and its **top** end is below the floor → **Not suitable**, reason "salary below floor (stated: ...)".
-- Salary stated and the floor falls inside the range → keep, note it in caveats.
+- Stated range **overlaps** the band → keep.
+- Stated **top** end is below the band's minimum → **Not suitable**, reason "salary below band (stated: ...)".
+- Stated **bottom** end is above the band's maximum → keep, but add the caveat "pays above target band - check seniority" (it often signals a Senior / Lead role; apply the Seniority Gate strictly).
 - Salary **not stated** → keep, record Salary = "Not stated". Never guess or estimate a salary.
+
+What she **asks for** on application forms is separate: see `personal-form-defaults.local.md`.
 
 ## Language Filter
 
@@ -219,3 +267,4 @@ If the user names a focus area, run that category's queries plus 2-3 custom quer
 - "/scrape AI" -> Priority 3
 - "/scrape broad" -> all priorities and both rings
 - "/scrape uk", "/scrape czech" -> that market only
+- "/scrape eu", "/scrape us" -> that market only, sponsored roles only (freehire visa searches + "EU and US with sponsorship" queries)
