@@ -8,7 +8,7 @@ framework_version: 1.1.1
 
 ## Identity
 - **Name:** Quintice Chen (legal name Hsiao Ching Chen)
-- **Location:** London, United Kingdom first; open to roles anywhere in the UK or the Czech Republic (no sponsorship needed in either); also other EU countries and the US when the employer sponsors the visa
+- **Location:** London, United Kingdom first; open to roles anywhere in the UK or the Czech Republic (no sponsorship needed in either); also other EU countries, the US and the UAE when the employer sponsors the visa
 - **Phone:** see `personal-form-defaults.local.md`
 - **Email:** quinticechen@gmail.com
 - **LinkedIn:** https://www.linkedin.com/in/quintice-chen/

@@ -5,6 +5,7 @@ Market, in priority order (Hybrid, on-site or remote all accepted; **no Taiwan r
 2. **Czech Republic** - no sponsorship needed.
 3. **Other EU countries** - only roles that offer visa sponsorship (see "Visa sponsorship rule" below).
 4. **United States** - only roles that offer visa sponsorship.
+5. **United Arab Emirates** - only roles that offer visa sponsorship.
 
 Target salary band (gross annual base): **UK £70,000-£110,000**, **Europe (EU incl. Czech Republic) €80,000-€115,000**, **US $140,000-$200,000** (see "Salary Filter" below).
 Function: **Product Manager** (Product Manager / Product Owner / Senior Product Manager / Product Operation Manager / AI Product Manager / Technical Product Manager), with an AI / decisioning focus.
@@ -21,9 +22,9 @@ Source of truth for this strategy: the Notion skill page "Job search digest"
 
 **Market priority:** London → rest of UK / remote-UK → Czech Republic → EU with sponsorship → US with sponsorship. When a run is short on time or volume, cut from the end of that list.
 
-## Visa sponsorship rule (EU outside CZ, and US)
+## Visa sponsorship rule (EU outside CZ, US and UAE)
 
-UK and Czech Republic roles never need this check. For every other EU role and every US role, record a **Sponsorship** value from the official posting and public registers:
+UK and Czech Republic roles never need this check. For every other EU role, every US role and every UAE role, record a **Sponsorship** value from the official posting and public registers:
 
 | Sponsorship | Evidence | Result |
 |---|---|---|
@@ -32,7 +33,7 @@ UK and Czech Republic roles never need this check. For every other EU role and e
 | **None** | The posting says no sponsorship, "must already have the right to work in <country>", citizens / green-card holders only, or security clearance required; or it is silent and the company is on no register | FAIL (deal-breaker) |
 
 - freehire's `visa_sponsorship=true` comes from an AI reading of the posting. Confirm the wording in the official posting before recording **Stated**; if the posting doesn't say it, fall back to the register check.
-- Other EU countries have no public sponsor register, so only **Stated** passes there.
+- Other EU countries and the UAE have no public sponsor register, so only **Stated** passes there.
 - US caveat: most first-time H-1B visas go through the March registration lottery with an October start. Note it in caveats for US roles that don't name another route.
 - Write the Sponsorship value in the row's `## Fit score` caveats (e.g. "Sponsorship: Stated - 'we sponsor visas' in posting").
 
@@ -111,6 +112,25 @@ site:linkedin.com/jobs "product manager" "will sponsor" "United States"
 
 Then check each lead against the Visa sponsorship rule above.
 
+**Lenny's Jobs** (https://www.lennysjobs.com/, every run, after the searches above): a curated product-management board run on TrueUp. It has no URL search: filters run in the page, plain fetches of most pages return 403, and single-job pages (`/job/...`) are members-only. So search it in her Chrome through the browser tools:
+
+1. Open https://www.lennysjobs.com/ in a new tab. Decline non-essential cookies. Never sign in, verify a newsletter subscription or create an account; if a filter or listing needs that, stop and note it as "Not reachable" in the Step 5 summary.
+2. Set these filters (her saved Lenny's Jobs preferences):
+
+   | Filter | Value |
+   |--------|-------|
+   | Job family | Product Management |
+   | Current level | Mid-level (the board also shows current level + 1) |
+   | Locations - remote | 🌎 Remote |
+   | Locations - in-office | 🇬🇧 United Kingdom, 🇺🇸 United States, 🇨🇿 Czech Republic, 🇦🇪 United Arab Emirates (leave 🇹🇼 Taiwan off: never Taiwan, per `CLAUDE.md`) |
+   | Tech sectors | AI, B2B SaaS, FinTech |
+   | Company stages | Growth-stage startups, Public tech, FAANG+ |
+
+   Then read the results, and also search the Step B terms plus `AI`, `fintech` and `product owner` with the same filters. The filters only widen what she sees; the location rules still apply to every hit (US and UAE roles need the Visa sponsorship rule).
+3. Read the visible listings (company, title, location, updated date). Skip Head / Director / Principal / Staff titles and anything the hard exclusions rule out.
+4. Each hit is a lead only: find the role on the company's own careers site or ATS and store that official URL. Never store a `lennysjobs.com` or `trueup.io` link as the posting URL. Tag the result `"source": "websearch"` and `"portal": "lennysjobs"`.
+5. Don't call the board's internal search API or read its page data in bulk; use the page the way a visitor would.
+
 ### Job sites to search
 
 Cover every group below in each run (narrow-to-wide, London first). All of them are **leads only**: confirm each role on the company's own careers site or ATS before it counts, and record that official URL. Search them through WebSearch with `site:` queries (or the Indeed connector where noted); never log in, create accounts or scrape behind a login.
@@ -156,6 +176,7 @@ Czech postings are often in Czech: also search `produktový manažer`, `product 
 | Wellfound (formerly AngelList Talent) | `site:wellfound.com/jobs` | |
 | Seedtable | `site:seedtable.com/jobs` | European startups |
 | VC portfolio job boards | `site:talent.seedcamp.com`, `site:talent.octopusventures.com`, `site:jobs.balderton.com`, `site:indexventures.com/startup-jobs` | UK/European portfolios; many fintechs |
+| Lenny's Jobs | Browser only, see "Lenny's Jobs" under Step B | Curated PM board (TrueUp); job pages are members-only |
 | Hacker News "Who is hiring" | `site:news.ycombinator.com "Who is hiring"` + "London" OR "remote (UK)" | Monthly thread |
 
 **Visa sponsorship boards and registers (EU and US)**
@@ -224,13 +245,13 @@ Title variants to try in any category: Product Manager, Senior Product Manager, 
 ## Location Filter
 
 - **PASS:** anywhere in the UK or the Czech Republic (hybrid, on-site or remote). London ranks first; when two roles score the same, London wins.
-- **PASS with sponsorship:** other EU countries and the US, when the role's Sponsorship is **Stated** or **Likely** (see "Visa sponsorship rule"). Ranked after UK and Czech roles of the same score.
-- **FAIL:** EU (outside CZ) or US roles with Sponsorship = **None**; roles in any other country (including Taiwan, and non-EU Europe such as Switzerland, Norway or Ukraine); remote roles restricted to a country she can't work in.
+- **PASS with sponsorship:** other EU countries, the US and the UAE, when the role's Sponsorship is **Stated** or **Likely** (see "Visa sponsorship rule"). Ranked after UK and Czech roles of the same score.
+- **FAIL:** EU (outside CZ), US or UAE roles with Sponsorship = **None**; roles in any other country (including Taiwan, and non-EU Europe such as Switzerland, Norway or Ukraine); remote roles restricted to a country she can't work in.
 - **FLAG:** frequent international travel, or a fully in-office requirement - note it as a caveat, don't exclude.
 
 ## Hard exclusions
 
-- US-citizen-only, green-card-only or security-clearance roles; any EU or US role that says it won't sponsor.
+- US-citizen-only, green-card-only or security-clearance roles; any EU, US or UAE role that says it won't sponsor.
 - Pure engineering, data-science, or credit-risk-analyst roles (not product roles).
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years.
 - **Start date (UK roles):** if a UK role says it needs someone to start before January 2027, **flag it, don't exclude it.**

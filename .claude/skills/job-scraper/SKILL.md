@@ -105,7 +105,7 @@ Tag each fallback result as WebSearch-sourced, keeping the portal tag when the f
 
 Get today's date first (`date`). Then run `search-queries.md` **Step A**: check every core-ring company's own careers site or ATS board for product roles in the UK or the Czech Republic (London first), plus EU and US roles that pass the Visa sponsorship rule (Product Manager / Product Owner / Senior PM), using the ATS endpoints and the Built In London fallback listed there. Open the wider ring only after the core ring is exhausted. Any role still live on the official site counts, whatever its posting date. Record every company whose board and Built In page both failed, for the "Not reachable" line in Step 5.
 
-Then run `search-queries.md` **Step B** (Indeed connector with country `GB`, WebSearch, Built In London) for the listed terms, then the Czech searches, then the "EU and US with sponsorship" searches. Aggregator hits are leads only: confirm each on the company's own site and store the official posting URL. Tag sweep results `"source": "websearch"` and `"portal": "official-careers"` so Step 4 records where they came from.
+Then run `search-queries.md` **Step B** (Indeed connector with country `GB`, WebSearch, Built In London) for the listed terms, then the Czech searches, then the "EU and US with sponsorship" searches, then Lenny's Jobs in the browser (load the Chrome tools first; if the browser isn't connected, skip it and say so in Step 5). Aggregator hits are leads only: confirm each on the company's own site and store the official posting URL. Tag sweep results `"source": "websearch"` and `"portal": "official-careers"` so Step 4 records where they came from.
 
 ### Step 2: Fetch & Parse
 
@@ -346,7 +346,7 @@ Then write one "Job digest - <YYYY-MM-DD>" page under the Job Hunting page listi
 
 1. **Never fabricate job postings.** Only present jobs from actual CLI search/detail output or WebSearch/WebFetch results.
 2. **Respect deduplication.** Always check job_scraper/seen_jobs.json AND job_search_tracker.csv before presenting.
-3. **Focus on the target markets.** Keep roles in the UK (London first) or the Czech Republic (any work type), then EU and US roles whose Sponsorship is Stated or Likely (see "Visa sponsorship rule" in `search-queries.md`). Skip roles based anywhere else (including Taiwan), EU/US roles with no sponsorship evidence, and roles whose stated salary tops out below the target band in `search-queries.md`.
+3. **Focus on the target markets.** Keep roles in the UK (London first) or the Czech Republic (any work type), then EU, US and UAE roles whose Sponsorship is Stated or Likely (see "Visa sponsorship rule" in `search-queries.md`). Skip roles based anywhere else (including Taiwan), EU/US/UAE roles with no sponsorship evidence, and roles whose stated salary tops out below the target band in `search-queries.md`.
 4. **Only open positions.** Skip postings with expired deadlines or those marked as closed.
 5. **Be efficient with detail fetches.** Don't run `detail` or WebFetch on every search hit — pre-filter by title/snippet, then fetch only promising matches.
 6. **Parallel searches.** Run portal CLI searches in parallel; use WebSearch only for gaps the CLIs don't cover.

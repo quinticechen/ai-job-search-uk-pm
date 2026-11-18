@@ -29,9 +29,9 @@ The Notion Applications DB is the record of every application; full rules in `.c
 ### Identity
 - **Name:** Quintice Chen
 - **Target:** Product Manager roles (PM / Product Owner / Senior PM) with an AI or credit-decisioning focus
-- **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote); other EU countries and the US only with employer visa sponsorship
+- **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote); other EU countries, the US and the UAE only with employer visa sponsorship
 - **Target salary band:** UK £70,000-£110,000; Europe €80,000-€115,000; US $140,000-$200,000 (gross annual base). Asks on application forms: £80,000-£85,000 / €85,000-€90,000 / $150,000
-- **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic; needs sponsorship elsewhere in the EU and in the US (see "Visa sponsorship rule" in `.claude/skills/job-scraper/search-queries.md`)
+- **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic; needs sponsorship elsewhere in the EU, in the US and in the UAE (see "Visa sponsorship rule" in `.claude/skills/job-scraper/search-queries.md`)
 - **Languages:**
   | Language | Level |
   |----------|-------|
@@ -102,7 +102,7 @@ Full company lists and categories: `.claude/skills/job-scraper/search-queries.md
 ### Deal-breakers
 <!-- Hard constraints on job search. Language requirements are handled separately and
 automatically from your Languages table above - don't duplicate them here. -->
-- Roles outside the UK and the Czech Republic, unless they are in the EU or US **and** the employer sponsors the visa (Stated, or Likely from a public sponsor register); never Taiwan
+- Roles outside the UK and the Czech Republic, unless they are in the EU, US or UAE **and** the employer sponsors the visa (Stated, or Likely from a public sponsor register); never Taiwan
 - Stated salary whose top end is below the band (UK £70,000; Europe €80,000; US $140,000)
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years
 - Pure engineering, data-science or credit-risk-analyst roles
