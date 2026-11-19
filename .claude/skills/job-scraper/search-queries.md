@@ -8,7 +8,9 @@ Market, in priority order (Hybrid, on-site or remote all accepted; **no Taiwan r
 5. **United Arab Emirates** - only roles that offer visa sponsorship.
 
 Target salary band (gross annual base): **UK £70,000-£110,000**, **Europe (EU incl. Czech Republic) €80,000-€115,000**, **US $140,000-$200,000** (see "Salary Filter" below).
-Function: **Product Manager** (Product Manager / Product Owner / Senior Product Manager / Product Operation Manager / AI Product Manager / Technical Product Manager), with an AI / decisioning focus.
+Function: **Product Manager** (Product Manager / Product Owner / Senior Product Manager / Product Operation Manager / AI Product Manager / Technical Product Manager / Founding Product Manager).
+
+**Focus (from 2026-11-19): hands-on AI builder and AI-native workflow roles, in any industry.** These are roles whose core job is shipping LLM, agent or automation products, or redesigning work around AI: founding PMs at AI start-ups, internal AI platform or tooling teams, and AI PMs at fintech, legal, data or workflow companies. Lending and decisioning are one domain among several, not the target market. **Why:** since July 2026 every interview came from a role whose first requirement was hands-on AI building or a conversion funnel (Citi GenAI platform, duvo.ai, 9fin, Lendable UK Loans). Roles that required years in lending got 0 interviews out of 52. Staying domain-locked would also shrink her market to a niche.
 
 Source of truth for this strategy: the Notion skill page "Job search digest"
 (https://app.notion.com/p/40bb07b9915c80ab9fa6e26b570ebff9). If the two disagree, the Notion page wins - tell the user so this file can be updated.
@@ -43,21 +45,23 @@ The `site:` query templates in this file are the **WebSearch fallback** and the 
 
 ## Candidate snapshot (for query design)
 
-- AI Product Manager, ~4.5 years full-time PM. Positioning: "AI Product Manager · Credit Decisioning" - application-layer AI in decisioning / underwriting workflows, not model building.
+- AI Product Manager, ~4.5 years full-time PM. Positioning: **"hands-on AI product builder"**: ships application-layer AI (LLM workflows, agents, evals, HITL) into real business workflows, prototypes end to end herself, and proves value with metrics. Not model building. Credit decisioning is one proof point (Strive), not the headline.
 - Work authorisation without employer sponsorship in the **UK (from January 2027)** and the **Czech Republic**. Open to relocating anywhere in either country. London is first priority. Also open to other EU countries and the US **when the employer sponsors the visa**.
 - Seniority: strong in the mid-level PM pool (2-5 years asked). Senior PM asking 4-6 years is a stretch but allowed. **Skip** Head / Director / Principal / Staff, and Senior roles demanding 6+ years.
-- Ideal employer: licensed lender or credit vendor, 50-500 people, with its own credit/underwriting product team, a decisioning team, or document intelligence actively putting AI into document intake or decisioning.
-- **Search narrow-to-wide:** run the core ring first; open the wider rings only after the core is exhausted.
+- Ideal employer: an AI-native company or team, roughly 10-1,000 people, in any industry, where the PM builds hands-on: AI start-ups (founding or early PM), internal AI platform or capability teams at larger firms (like Citi's AI platforms team), and AI workflow companies in fintech, legal, data or operations. Small PM teams and "scrappy" cultures are a plus.
+- **Domain-lock rule:** if a posting requires a specific number of years in a domain she lacks (e.g. "2-3 years on consumer lending / BNPL / credit products", insurance, payments infrastructure, pharma), it is **Not suitable**, however good the rest of the fit, reason "domain tenure required". Keep domain roles only when the gate is general PM years (2-5) or the core problem is AI building or a conversion funnel.
+- **Freshness:** postings 7 days old or less come first, because early applications did better (Lendable: about 45 applicants, "top applicant"). Flag anything older than 30 days as "likely late". Don't re-apply to roles that already rejected her; every re-apply so far ended Hiring Closed.
+- **Search order:** run the AI-native ring first, then the core ring, then the wider ring.
 
 ## Three target categories
 
-Every role found is tagged with one category. The category picks the resume version (see `05-cv-templates.md`).
+Every role found is tagged with one category. The category picks the Canva master (see `05-cv-templates.md`). `/tailor` writes a fully customised resume from all three resume pages either way. **Search priority: Category 3 first.** Categories 1 and 2 count only when the domain-lock rule above passes.
 
 | Category | What it covers | Resume version |
 |----------|----------------|----------------|
 | 1 - Decisioning & document intelligence | Decision engines, workflow re-engineering, document intelligence in highly regulated environments. Lending & fintech first; also legal tech, KYC/KYB & onboarding, insurance underwriting, accounting/tax. | "Decision Engine" or "SME Credit Decision" |
 | 2 - Consumer lending growth | Consumer lending PM roles focused on growth and conversion funnels (acquisition, onboarding, originations funnel, engagement, retention). Credit experience usually not required. | "Consumer Lending" |
-| 3 - General AI / Technical PM | Strong AI PM and Technical PM roles that fit neither category above. | "General AI Agent (Ship Fast)" |
+| 3 - AI builder / AI-native workflow (**primary**) | Hands-on AI PM, Technical PM and founding PM roles in any industry: LLM / agent products, AI automation of business workflows, internal AI platforms and tooling, AI adoption teams | "General AI Agent (Ship Fast)" |
 
 ## Step A - Official careers sweep (run every time)
 
@@ -72,7 +76,16 @@ ATS endpoints to try, in order:
 
 Fallback when the board can't be found or reached: the company's Built In London page, `https://builtinlondon.uk/company/<slug>/jobs`. If both fail, list the company under **"Not reachable"** in the Step 5 report - never guess.
 
-### Core ring
+### AI-native ring (sweep first)
+
+AI start-ups and AI workflow companies with London, UK-remote or EU roles. Find each company's ATS board the usual way, and list any that can't be reached.
+
+- **AI workflow / agents:** duvo.ai, Fyxer AI, Granola, Tessl, Wordsmith AI, Synthesia, ElevenLabs, PolyAI, Cohere, n8n (EU, sponsorship rule), Lovable (EU, sponsorship rule), Mistral AI (EU, sponsorship rule)
+- **AI in financial services:** Nevis, 9fin, Cleo, Lenkie, Heron, Fifth Dimension
+- **AI in legal / documents:** Legora, Harvey, Luminance, Robin AI, Definely, Lawhive
+- **Internal AI platform teams at large firms:** check careers search for "AI product manager" / "generative AI" at Citi, JPMorganChase, LSEG, Bauer Media, Tesco, RELX
+
+### Core ring (domain roles: keep only if the domain-lock rule passes)
 
 - **AI / data-driven challengers:** iwoca, OakNorth, Capital on Tap, Funding Circle, Uncapped, YouLend, Liberis, Kriya (formerly MarketInvoice), Capify, Tide, Starling (incl. Engine by Starling), Revolut Business
 - **Decision engines:** Taktile, Provenir, GDS Link, FICO (FICO Platform), Experian (PowerCurve / decisioning / affordability), CRIF (StrategyOne), ACTICO, Zest AI, Scienaptic, Floowed
@@ -88,7 +101,7 @@ Fallback when the board can't be found or reached: the company's Built In London
 
 Run several distinct queries through the Indeed connector (country `GB`), WebSearch, and Built In London product search (`https://builtinlondon.uk/jobs/product-management?search=<term>`) for these terms:
 
-`credit`, `lending`, `underwriting`, `decisioning`, `affordability`, `document`, `KYC`, `legal`, `growth`
+`AI product manager`, `founding product manager`, `agentic`, `generative AI`, `LLM`, `AI platform`, `automation`, then the domain terms `credit`, `lending`, `underwriting`, `decisioning`, `document`, `KYC`, `legal`, `growth` (domain-lock rule applies)
 
 Use them to discover new companies that match the ideal-employer profile above. Treat every aggregator listing as a lead: confirm it on the company's own site before it counts.
 
@@ -207,7 +220,21 @@ Czech postings are often in Czech: also search `produktový manažer`, `product 
 
 **Remote roles must allow employment from the UK or the Czech Republic**, or else pass the Visa sponsorship rule for the EU country or US where they employ. "Remote" does not mean worldwide: check the posting's allowed countries or time zones. A Jobgether or aggregator listing is a lead to the real employer, never the posting itself.
 
-### Priority 1: Decisioning & document intelligence (Category 1)
+### Priority 1: AI builder / AI-native workflow (Category 3) - run first
+
+```
+site:linkedin.com/jobs "founding product manager" AI London OR "United Kingdom"
+site:linkedin.com/jobs "AI product manager" agentic OR agents OR LLM London
+site:linkedin.com/jobs "generative AI" "product manager" London
+"product manager" "AI platform" OR "AI tooling" OR "AI adoption" London
+"product manager" "AI-native" OR "AI native" London OR "remote UK"
+site:jobs.ashbyhq.com "product manager" AI London
+site:builtinlondon.uk "AI product manager"
+```
+
+Portal CLIs: freehire `title:founding product manager OR title:AI product manager OR title:agentic OR title:generative AI` with `--country GB`; linkedin-search `"founding product manager AI"`, `"generative AI product manager"`, `"agentic AI product manager"` (London / United Kingdom).
+
+### Priority 2 (was 1): Decisioning & document intelligence (Category 1) - domain-lock rule applies
 
 ```
 site:linkedin.com/jobs "product manager" credit decisioning London
@@ -221,7 +248,7 @@ site:builtinlondon.uk "product manager" underwriting
 "product manager" "insurance underwriting" AI UK
 ```
 
-### Priority 2: Consumer lending growth (Category 2)
+### Priority 3 (was 2): Consumer lending growth (Category 2) - funnel roles only; domain-lock rule applies
 
 ```
 site:linkedin.com/jobs "product manager" "consumer lending" London
@@ -231,7 +258,7 @@ site:builtinlondon.uk "product manager" growth lending
 "product manager" acquisition OR onboarding OR conversion fintech London
 ```
 
-### Priority 3: General AI / Technical PM (Category 3)
+### More Category 3 queries (from the old Priority 3)
 
 ```
 site:linkedin.com/jobs "AI product manager" London
@@ -253,6 +280,7 @@ Title variants to try in any category: Product Manager, Senior Product Manager, 
 
 - US-citizen-only, green-card-only or security-clearance roles; any EU, US or UAE role that says it won't sponsor.
 - Pure engineering, data-science, or credit-risk-analyst roles (not product roles).
+- Roles that require years in a specific domain she lacks (domain-lock rule in "Candidate snapshot").
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years.
 - **Start date (UK roles):** if a UK role says it needs someone to start before January 2027, **flag it, don't exclude it.**
 
@@ -283,9 +311,10 @@ English (fluent) and Mandarin Chinese (native) are her working languages. Czech 
 ## Adapting Queries
 
 If the user names a focus area, run that category's queries plus 2-3 custom queries for it:
-- "/scrape decisioning" -> Priority 1 + Step A core ring "Decision engines"
-- "/scrape consumer" -> Priority 2 + Step A "Consumer lending"
-- "/scrape AI" -> Priority 3
+- Default run -> Priority 1 (AI builder) + Step A AI-native ring, then the other priorities
+- "/scrape decisioning" -> Priority 2 + Step A core ring "Decision engines"
+- "/scrape consumer" -> Priority 3 + Step A "Consumer lending"
+- "/scrape AI" -> Priority 1 + "More Category 3 queries" + Step A AI-native ring
 - "/scrape broad" -> all priorities and both rings
 - "/scrape uk", "/scrape czech" -> that market only
 - "/scrape eu", "/scrape us" -> that market only, sponsored roles only (freehire visa searches + "EU and US with sponsorship" queries)

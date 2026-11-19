@@ -28,7 +28,7 @@ The Notion Applications DB is the record of every application; full rules in `.c
 
 ### Identity
 - **Name:** Quintice Chen
-- **Target:** Product Manager roles (PM / Product Owner / Senior PM) with an AI or credit-decisioning focus
+- **Target:** hands-on AI builder and AI-native workflow PM roles (PM / Product Owner / Senior PM / Founding PM) in any industry. Lending and decisioning are one domain, not a lock-in (see Focus in `.claude/skills/job-scraper/search-queries.md`)
 - **Location:** London, United Kingdom first; also anywhere in the UK or the Czech Republic (hybrid, on-site or remote); other EU countries, the US and the UAE only with employer visa sponsorship
 - **Target salary band:** UK £70,000-£110,000; Europe €80,000-€115,000; US $140,000-$200,000 (gross annual base). Asks on application forms: £80,000-£85,000 / €85,000-€90,000 / $150,000
 - **Work rights:** no sponsorship needed in the UK (from January 2027) or the Czech Republic; needs sponsorship elsewhere in the EU, in the US and in the UAE (see "Visa sponsorship rule" in `.claude/skills/job-scraper/search-queries.md`)
@@ -95,7 +95,8 @@ The Notion Applications DB is the record of every application; full rules in `.c
 ### Target Sectors
 <!-- Industries and companies you're targeting -->
 Full company lists and categories: `.claude/skills/job-scraper/search-queries.md`.
-- Decision engines & SME/specialist lending: Taktile, Provenir, Experian, iwoca, OakNorth, Allica Bank, Funding Circle
+- AI builder / AI-native workflow (primary): duvo.ai, Nevis, 9fin, Legora, Harvey, Synthesia, ElevenLabs, PolyAI, Cohere, plus internal AI platform teams (Citi, LSEG, Bauer Media)
+- Decision engines & SME/specialist lending (domain-lock rule applies): Taktile, Provenir, Experian, iwoca, OakNorth, Allica Bank, Funding Circle
 - Consumer lending growth: Lendable, Zopa, Monzo, ClearScore, Klarna UK
 - Regulated document / workflow AI: Luminance, Harvey, Sumsub, Quantexa, Cytora
 
@@ -106,6 +107,7 @@ automatically from your Languages table above - don't duplicate them here. -->
 - Stated salary whose top end is below the band (UK £70,000; Europe €80,000; US $140,000)
 - Head / Director / Principal / Staff roles, and Senior roles demanding 6+ years
 - Pure engineering, data-science or credit-risk-analyst roles
+- Roles that require years in a specific domain she lacks (e.g. "2-3 years on consumer lending products")
 
 ## Repo Structure
 - `cv/` - LaTeX CV variants (moderncv template, banking style)

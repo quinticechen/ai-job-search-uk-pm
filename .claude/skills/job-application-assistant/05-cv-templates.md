@@ -27,7 +27,9 @@ Run through `/canva` (pipeline step 3 - see `10-notion-pipeline.md`). It prepare
 1. `copy-design` the master, titled `Quintice Chen - {Company} - {Position}`. **Never edit the master.**
 2. Open a transaction on the copy (`read-design` with `open_transaction` and thumbnails).
 3. Replace the headline under her name (element `LBwH95ZYwQFVcgd6` - verify via `read-design`; currently "AI Product Manager") with the posting's job title.
-4. Replace the **SUMMARY** and the **PROFESSIONAL EXPERIENCE** bullet points with the text in the row's `## Tailored CV` section, exactly as she left it, keeping the current formatting. Do not pull text from the resume pages directly; that was step 2's job.
+4. Replace the **SUMMARY**, the **PROFESSIONAL EXPERIENCE** bullet points and the **SKILLS** section with the text in the row's `## Tailored CV` section, exactly as she left it, keeping the current formatting. `/tailor` now writes fully customised resumes, so the number of bullets per role can differ from the master: add or remove bullet lines to match, using the master's existing bullet style.
+   - If the Tailored CV has a **Keyword line**, put it in the text box directly under the headline. If the master has no such box, duplicate the headline box's styling one line below it. If that isn't possible, report it and leave the line out; never drop other text to make room.
+   - Do not pull text from the resume pages directly; that was step 2's job.
    - **Never change the company name or the official job title** - the part before the brackets, e.g. "Strive Computing | AI Product Manager", "Travel Expert Group (HKEX: 1235) | Product Manager". The industry description inside the brackets (e.g. "(Fintech / Lending Underwriting)", "(Fintech/SME Lending)", "(EdTech)") may be adjusted to fit the role, as long as it stays true.
    - Do not change any other text.
 5. Check the thumbnail: nothing overlaps, and text stays on its page (bottom <= ~1103px). If text overflows, fix the layout in this order and never shorten her text:

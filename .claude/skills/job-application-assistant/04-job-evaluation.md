@@ -85,11 +85,11 @@ This is her own scoring method (Notion "Job search digest", Step 5). It decides 
    - General: https://app.notion.com/p/3ecb07b9915c81b78ea4eb77f36a8fb2
 2. **Pick the best resume version** for the role, using the category from `job-scraper/search-queries.md`: Category 1 -> "Decision Engine" or "SME Credit Decision"; Category 2 -> "Consumer Lending"; Category 3 -> "General AI Agent (Ship Fast)".
 3. **Extract the JD's required skills**, ranked by importance, with weights summing to 100%. Mark hard requirements as **REQUIRED**.
-4. **Score each skill 0-10** using only evidence found in that resume, and cite the resume line. No evidence = 0. Never invent experience.
+4. **Score each skill 0-10** using evidence from **all three** resume pages and the STAR stories, because `/tailor` now writes a fully customised resume from the whole evidence bank. Cite the source line. The chosen Resume Version only picks the Canva master. No evidence = 0. Never invent experience.
 5. **Flag any REQUIRED skill scoring 0** as missing.
 6. **Weighted total out of 100** = sum of (weight x score / 10).
 
-**Suitable** = total >= 65 **and** no missing REQUIRED skill. Everything else is **Not suitable**, reported with a one-line reason.
+**Suitable** = total >= 65 **and** no missing REQUIRED skill **and** no domain-tenure gate she can't meet (domain-lock rule, `job-scraper/search-queries.md`). Everything else is **Not suitable**, reported with a one-line reason.
 
 Output table:
 
